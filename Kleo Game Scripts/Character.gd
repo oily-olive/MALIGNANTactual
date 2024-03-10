@@ -3,6 +3,8 @@ extends CharacterBody3D
 @export var NORMAL_SPEED = 6.5
 @export var SPRINT_SPEED = 6.5
 @export var JUMP_VELOCITY = 5.5
+@export var WALL_JUMP_VELOCITY = 10
+@export var WALL_JUMP_COUNTER = 4
 @export var STAMINA = 10
 @export var MOUSE_SENSITIVITY = 0.005
 @onready var neck := $CameraRoot
@@ -43,10 +45,16 @@ func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+		if is_on_wall_only() and Input.is_action_just_pressed("jump") and WALL_JUMP_COUNTER != 0:
+			velocity = get_wall_normal() * WALL_JUMP_VELOCITY
+			velocity.y += JUMP_VELOCITY * 0.7
+			WALL_JUMP_COUNTER = WALL_JUMP_COUNTER - 1
 	
 	# Handle jump.
-	if Input.is_action_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	if is_on_floor():
+		WALL_JUMP_COUNTER = 4
+		if Input.is_action_pressed("jump"):
+			velocity.y = JUMP_VELOCITY
 
 
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
