@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="1_hd2yr"]
 [ext_resource type="Script" path="res://Kleo Game Scenes/testworld.gd" id="1_x6job"]
-[ext_resource type="Texture2D" uid="uid://xh4st24mlexl" path="res://Kleo Game Sprites/crosshair_placeholder.png" id="2_2dh13"]
+[ext_resource type="Texture2D" uid="uid://buli748lp1fpf" path="res://Kleo Game Sprites/crosshair_03.png" id="3_vmg8r"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
 sky_top_color = Color(0.0352941, 0.290196, 0.333333, 1)
@@ -97,9 +97,11 @@ offset_bottom = 40.0
 
 [node name="Crosshair" type="TextureRect" parent="UI"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("2_2dh13")
+offset_left = 555.0
+offset_top = 314.0
+offset_right = 572.0
+offset_bottom = 331.0
+texture = ExtResource("3_vmg8r")
 
 [node name="miniplataforma" type="StaticBody3D" parent="."]
 transform = Transform3D(0.999999, -9.31323e-10, 0, 9.31323e-10, 0.999999, 0, 0, 0, 1, 8.37253, -7.42954, -0.091872)
