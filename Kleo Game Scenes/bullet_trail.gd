@@ -1,9 +1,12 @@
 extends MeshInstance3D
 
+@onready var gunImpact = $HitImpact
+var alpha = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	var duplicate_material = material_override.duplicate()
+	material_override = duplicate_material
 
 func init(posBarrel, posTarget):
 	var draw_mesh = ImmediateMesh.new()
@@ -13,9 +16,14 @@ func init(posBarrel, posTarget):
 	draw_mesh.surface_add_vertex(posTarget)
 	draw_mesh.surface_end()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	alpha = alpha - (delta * 3.5)
+	material_override.albedo_color.a = alpha
+
+func trigger_particle(pos, barrelPosition): #reminder to check the enemy scan
+	gunImpact.position = pos
+	gunImpact.look_at(barrelPosition)
+	gunImpact.emitting = true
 
 func _on_timer_timeout():
 	queue_free()
