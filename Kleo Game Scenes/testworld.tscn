@@ -1,9 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://bi15hhlna83u3"]
+[gd_scene load_steps=17 format=3 uid="uid://bi15hhlna83u3"]
 
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="1_hd2yr"]
 [ext_resource type="Script" path="res://Kleo Game Scenes/testworld.gd" id="1_x6job"]
 [ext_resource type="PackedScene" uid="uid://d4la7y0y5d6gd" path="res://Kleo Game Models/table.blend" id="4_v4iya"]
-[ext_resource type="PackedScene" uid="uid://baqa7oc233qyt" path="res://Kleo Game Models/plchld_dummy.blend" id="5_dkyan"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
 sky_top_color = Color(0.0352941, 0.290196, 0.333333, 1)
@@ -124,9 +123,6 @@ shape = SubResource("ConvexPolygonShape3D_antku")
 
 [node name="table" parent="." instance=ExtResource("4_v4iya")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.61819, -7.53617, -4.86296)
-
-[node name="plchld_dummy" parent="." instance=ExtResource("5_dkyan")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -16.4805, -7, -3.54392)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6184, -6.13074, 10.2124)

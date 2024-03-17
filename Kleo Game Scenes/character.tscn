@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
+[ext_resource type="PackedScene" uid="uid://csoxj7rcjig06" path="res://Kleo Game Scenes/crosshair.tscn" id="2_qn1ub"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
-[ext_resource type="PackedScene" uid="uid://5pxsrd4ot10l" path="res://Kleo Game Models/crosshair.blend" id="3_p081x"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 
@@ -21,7 +21,11 @@ shape = SubResource("CapsuleShape3D_1812g")
 
 [node name="Camera3D" type="Camera3D" parent="CameraRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.631373, 0)
+current = true
 fov = 100.0
+
+[node name="crosshair" parent="CameraRoot/Camera3D" instance=ExtResource("2_qn1ub")]
+transform = Transform3D(-0.001, 0, -1.50996e-10, 0, 0.001, 0, 1.50996e-10, 0, -0.001, 0, 0, -0.176208)
 
 [node name="plchld_revolver_better" parent="CameraRoot/Camera3D" instance=ExtResource("2_t7emm")]
 transform = Transform3D(-0.15, 0, -2.26494e-08, 0, 0.15, 0, 2.26494e-08, 0, -0.15, 0.591212, -0.344403, -0.400833)
@@ -34,6 +38,3 @@ debug_shape_custom_color = Color(0.670588, 0, 0, 1)
 
 [node name="RayCastEnd" type="Node3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
-
-[node name="crosshair" parent="CameraRoot/Camera3D" instance=ExtResource("3_p081x")]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, -1.266)
