@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=7 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://csoxj7rcjig06" path="res://Kleo Game Scenes/crosshair.tscn" id="2_qn1ub"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
+[ext_resource type="PackedScene" uid="uid://bbl0cccbs7p8l" path="res://Kleo Game Scenes/hp_bar.tscn" id="2_vu8in"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 
@@ -23,6 +24,9 @@ shape = SubResource("CapsuleShape3D_1812g")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.631373, 0)
 current = true
 fov = 100.0
+
+[node name="hp_bar" parent="CameraRoot/Camera3D" instance=ExtResource("2_vu8in")]
+transform = Transform3D(-4.37114e-10, -0.01, 0, 0.01, -4.37114e-10, 0, 0, 0, 0.01, -0.367239, -0.143944, -0.176)
 
 [node name="crosshair" parent="CameraRoot/Camera3D" instance=ExtResource("2_qn1ub")]
 transform = Transform3D(-0.001, 0, -1.50996e-10, 0, 0.001, 0, 1.50996e-10, 0, -0.001, 0, 0, -0.176208)
