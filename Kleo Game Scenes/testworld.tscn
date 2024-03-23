@@ -72,11 +72,6 @@ mesh = SubResource("BoxMesh_ixc8t")
 transform = Transform3D(100, 0, 0, 0, 10, 0, 0, 0, 100, 0, -12, 0)
 shape = SubResource("BoxShape3D_sx71x")
 
-[node name="Cylinder" type="StaticBody3D" parent="."]
-
-[node name="miniplataforma" type="StaticBody3D" parent="."]
-transform = Transform3D(0.999999, -9.31323e-10, 0, 9.31323e-10, 0.999999, 0, 0, 0, 1, 8.37253, -7.42954, -0.091872)
-
 [node name="pared-X" type="StaticBody3D" parent="."]
 transform = Transform3D(0.999999, -9.31323e-10, 0, 9.31323e-10, 0.999999, 0, 0, 0, 1, -50.1513, -6.68283, 46.6197)
 
