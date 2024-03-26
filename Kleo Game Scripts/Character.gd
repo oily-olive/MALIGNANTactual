@@ -1,11 +1,11 @@
 extends CharacterBody3D
 
 @export var NORMAL_SPEED = 6.5
-@export var SPRINT_SPEED = 6.5
-@export var JUMP_VELOCITY = 5.5
-@export var WALL_JUMP_VELOCITY = 10
+@export var SPRINT_SPEED = 20
+@export var JUMP_VELOCITY = 6.5
+@export var WALL_JUMP_VELOCITY = 12
 @export var WALL_JUMP_COUNTER = 4
-@export var STAMINA = 10
+@export var STAMINA = 100.0
 @export var MOUSE_SENSITIVITY = 0.005
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
@@ -24,6 +24,9 @@ var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
 var instance
 
+const BASE_FOV = 100 #base camera has 100° FOV
+const FOV_MULTIPLIER = 1.01
+
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _unhandled_input(event): # Window Activity and Camera Movement
@@ -35,7 +38,7 @@ func _unhandled_input(event): # Window Activity and Camera Movement
 		if event is InputEventMouseMotion:
 			neck.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 			cam.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
-			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-65), deg_to_rad(70))
+			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
 func _ready():
 	pass
@@ -47,7 +50,7 @@ func _physics_process(delta):
 		velocity.y -= gravity * delta
 		if is_on_wall_only() and Input.is_action_just_pressed("jump") and WALL_JUMP_COUNTER != 0:
 			velocity = get_wall_normal() * WALL_JUMP_VELOCITY
-			velocity.y += JUMP_VELOCITY * 0.7
+			velocity.y += JUMP_VELOCITY * 0.85
 			WALL_JUMP_COUNTER = WALL_JUMP_COUNTER - 1
 	
 	# Handle jump.
@@ -56,21 +59,30 @@ func _physics_process(delta):
 		if Input.is_action_pressed("jump"):
 			velocity.y = JUMP_VELOCITY
 
-
+	if Input.is_action_just_released("sprint"):
+		STAMINA = 100.0
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		if is_on_floor():
 			velocity.x = lerp(velocity.x, direction.x * 6.5, delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * 6.5, delta * 7.0)
+			if Input.is_action_pressed("sprint") && STAMINA != 0:
+				velocity.x = lerp(velocity.x, direction.x * SPRINT_SPEED, delta * 7.5)
+				velocity.z = lerp(velocity.z, direction.z * SPRINT_SPEED, delta * 7.5)
+				STAMINA = STAMINA - 0.01
 		else:
-			velocity.x = lerp(velocity.x, direction.x * 30.5, delta * 3)
-			velocity.z = lerp(velocity.z, direction.z * 30.5, delta * 3)
+			velocity.x = lerp(velocity.x, direction.x * 30.5, delta * 1.5)
+			velocity.z = lerp(velocity.z, direction.z * 30.5, delta * 1.5)
+			if Input.is_action_pressed("sprint") && STAMINA != 0:
+				velocity.x = direction.x * 40.0
+				velocity.z = direction.z * 40.0
+				STAMINA = STAMINA - 0.01
 	else:
 		if is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, 0.35)
 			velocity.z = move_toward(velocity.z, 0, 0.35)
-		
+	
 	#headbob
 	t_bob += delta * velocity.length() * float(is_on_floor())
 	cam.transform.origin = headbob(t_bob)
@@ -78,7 +90,12 @@ func _physics_process(delta):
 	#GUN
 	if Input.is_action_pressed("primaryFire"):
 		shoot_hitscan()
-
+	
+	#FOV
+	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED)
+	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped)
+	cam.fov = lerp(cam.fov, targetFov, delta * 8)
+	
 	move_and_slide()
 
 func headbob(time) -> Vector3:
@@ -93,6 +110,7 @@ func shoot_hitscan():
 		instance = bulletTrail.instantiate()
 		if raycast.is_colliding():
 			instance.init(revolverBarrel.global_position, raycast.get_collision_point())
+			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
 			#add a check for enemies
 			#add a way to make bulletholes on surfaces
 		else:
