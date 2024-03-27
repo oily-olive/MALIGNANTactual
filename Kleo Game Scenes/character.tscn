@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=8 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
 [ext_resource type="Texture2D" uid="uid://cyn03qprx6lvf" path="res://Kleo Game Sprites/crosshairs.png" id="3_ce5vw"]
 [ext_resource type="PackedScene" uid="uid://b5ullklw3cyxk" path="res://Kleo Game Scenes/shotgun.tscn" id="3_xhexq"]
+[ext_resource type="PackedScene" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 
@@ -27,10 +28,14 @@ fov = 100.0
 
 [node name="plchld_revolver_better" parent="CameraRoot/Camera3D" instance=ExtResource("2_t7emm")]
 transform = Transform3D(-0.15, 0, -2.26494e-08, 0, 0.15, 0, 2.26494e-08, 0, -0.15, 0.591212, -0.344403, -0.400833)
+visible = false
 
 [node name="new_shotgun" parent="CameraRoot/Camera3D" instance=ExtResource("3_xhexq")]
 transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374086, -0.376776, -0.541138)
 visible = false
+
+[node name="double_shotty" parent="CameraRoot/Camera3D" instance=ExtResource("4_pyyou")]
+transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374, -0.377, -0.541)
 
 [node name="RayCast3D" type="RayCast3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.00394)
