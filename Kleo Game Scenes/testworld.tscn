@@ -1,8 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://bi15hhlna83u3"]
+[gd_scene load_steps=19 format=3 uid="uid://bi15hhlna83u3"]
 
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="1_hd2yr"]
 [ext_resource type="Script" path="res://Kleo Game Scenes/testworld.gd" id="1_x6job"]
+[ext_resource type="Material" uid="uid://bgoiu53shh7gc" path="res://Olive Game Material Overrides/placeholder_ground.tres" id="3_r5mxc"]
+[ext_resource type="Material" uid="uid://c26lvnncn7f2d" path="res://Olive Game Material Overrides/placeholder_wall.tres" id="4_3lusl"]
 [ext_resource type="PackedScene" uid="uid://d4la7y0y5d6gd" path="res://Kleo Game Models/table.blend" id="4_v4iya"]
+[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_skaob"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
 sky_top_color = Color(0.0352941, 0.290196, 0.333333, 1)
@@ -21,26 +24,36 @@ tonemap_mode = 2
 rough = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_ixc8t"]
+subdivide_width = 50
+subdivide_depth = 50
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sx71x"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nylfm"]
-
 [sub_resource type="BoxMesh" id="BoxMesh_wsces"]
-material = SubResource("StandardMaterial3D_nylfm")
+material = ExtResource("4_3lusl")
+subdivide_width = 25
+subdivide_height = 25
+subdivide_depth = 25
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_antku"]
 points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5)
 
 [sub_resource type="PrismMesh" id="PrismMesh_31aau"]
+material = ExtResource("7_skaob")
 left_to_right = 1.0
 size = Vector3(5, 2.5, 5)
+subdivide_width = 5
+subdivide_height = 5
+subdivide_depth = 5
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_544yh"]
 data = PackedVector3Array(2.5, 1.25, 2.5, 2.5, -1.25, 2.5, -2.5, -1.25, 2.5, 2.5, 1.25, -2.5, -2.5, -1.25, -2.5, 2.5, -1.25, -2.5, 2.5, 1.25, 2.5, 2.5, 1.25, -2.5, 2.5, -1.25, 2.5, 2.5, 1.25, -2.5, 2.5, -1.25, -2.5, 2.5, -1.25, 2.5, 2.5, 1.25, -2.5, 2.5, 1.25, 2.5, -2.5, -1.25, -2.5, 2.5, 1.25, 2.5, -2.5, -1.25, 2.5, -2.5, -1.25, -2.5, -2.5, -1.25, 2.5, 2.5, -1.25, 2.5, -2.5, -1.25, -2.5, 2.5, -1.25, 2.5, 2.5, -1.25, -2.5, -2.5, -1.25, -2.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_nv5ie"]
+material = ExtResource("7_skaob")
 size = Vector3(17.87, 0.5, 11.14)
+subdivide_width = 10
+subdivide_depth = 10
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_nkj5s"]
 data = PackedVector3Array(-8.935, 0.25, 5.57, 8.935, 0.25, 5.57, -8.935, -0.25, 5.57, 8.935, 0.25, 5.57, 8.935, -0.25, 5.57, -8.935, -0.25, 5.57, 8.935, 0.25, -5.57, -8.935, 0.25, -5.57, 8.935, -0.25, -5.57, -8.935, 0.25, -5.57, -8.935, -0.25, -5.57, 8.935, -0.25, -5.57, 8.935, 0.25, 5.57, 8.935, 0.25, -5.57, 8.935, -0.25, 5.57, 8.935, 0.25, -5.57, 8.935, -0.25, -5.57, 8.935, -0.25, 5.57, -8.935, 0.25, -5.57, -8.935, 0.25, 5.57, -8.935, -0.25, -5.57, -8.935, 0.25, 5.57, -8.935, -0.25, 5.57, -8.935, -0.25, -5.57, 8.935, 0.25, 5.57, -8.935, 0.25, 5.57, 8.935, 0.25, -5.57, -8.935, 0.25, 5.57, -8.935, 0.25, -5.57, 8.935, 0.25, -5.57, -8.935, -0.25, 5.57, 8.935, -0.25, 5.57, -8.935, -0.25, -5.57, 8.935, -0.25, 5.57, 8.935, -0.25, -5.57, -8.935, -0.25, -5.57)
@@ -67,6 +80,7 @@ physics_material_override = SubResource("PhysicsMaterial_tccxq")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Big Platform"]
 transform = Transform3D(100, 5.96046e-08, 0, -5.96046e-07, 10, 0, 0, 0, 100, 0, -12, 0)
 mesh = SubResource("BoxMesh_ixc8t")
+surface_material_override/0 = ExtResource("3_r5mxc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Big Platform"]
 transform = Transform3D(100, 0, 0, 0, 10, 0, 0, 0, 100, 0, -12, 0)
