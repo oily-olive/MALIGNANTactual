@@ -70,14 +70,14 @@ func _physics_process(delta):
 			if Input.is_action_pressed("sprint") && STAMINA != 0:
 				velocity.x = lerp(velocity.x, direction.x * SPRINT_SPEED, delta * 7.5)
 				velocity.z = lerp(velocity.z, direction.z * SPRINT_SPEED, delta * 7.5)
-				STAMINA = STAMINA - 0.01
+				STAMINA = STAMINA - 0.5
 		else:
 			velocity.x = lerp(velocity.x, direction.x * 30.5, delta * 1.5)
 			velocity.z = lerp(velocity.z, direction.z * 30.5, delta * 1.5)
 			if Input.is_action_pressed("sprint") && STAMINA != 0:
 				velocity.x = direction.x * 40.0
 				velocity.z = direction.z * 40.0
-				STAMINA = STAMINA - 0.01
+				STAMINA = STAMINA - 1
 	else:
 		if is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, 0.35)
