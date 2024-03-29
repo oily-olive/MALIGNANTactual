@@ -59,14 +59,15 @@ func _physics_process(delta):
 		if Input.is_action_pressed("jump"):
 			velocity.y = JUMP_VELOCITY
 
-	if Input.is_action_just_released("sprint"):
-		STAMINA = 100.0
+	
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		if is_on_floor():
 			velocity.x = lerp(velocity.x, direction.x * 6.5, delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * 6.5, delta * 7.0)
+			if not Input.is_action_pressed("sprint") && STAMINA !=10:
+				STAMINA = STAMINA + 0.00001
 			if Input.is_action_pressed("sprint") && STAMINA != 0:
 				velocity.x = lerp(velocity.x, direction.x * SPRINT_SPEED, delta * 7.5)
 				velocity.z = lerp(velocity.z, direction.z * SPRINT_SPEED, delta * 7.5)
