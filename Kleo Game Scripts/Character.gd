@@ -13,6 +13,7 @@ extends CharacterBody3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
 @onready var raycast := $CameraRoot/Camera3D/RayCast3D
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
+@onready var staminaLabel := $CameraRoot2D/Camera2D/StaminaLabel
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -53,7 +54,10 @@ func _physics_process(delta):
 			velocity = get_wall_normal() * WALL_JUMP_VELOCITY
 			velocity.y += JUMP_VELOCITY * 0.85
 			WALL_JUMP_COUNTER = WALL_JUMP_COUNTER - 1
-	
+
+	# Stamina Label
+	staminaLabel.text = "STAMINA: " + str(STAMINA)
+
 	# Handle jump.
 	if is_on_floor():
 		WALL_JUMP_COUNTER = 4
