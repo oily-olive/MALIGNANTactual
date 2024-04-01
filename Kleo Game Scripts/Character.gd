@@ -68,6 +68,8 @@ func _physics_process(delta):
 		STAMINA = STAMINA + 0.5
 	if STAMINA > MAX_STAMINA:
 		STAMINA = MAX_STAMINA
+	if STAMINA < 0:
+		STAMINA = 0
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
