@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cyn03qprx6lvf" path="res://Kleo Game Sprites/crosshairs.png" id="3_ce5vw"]
 [ext_resource type="PackedScene" uid="uid://b5ullklw3cyxk" path="res://Kleo Game Scenes/shotgun.tscn" id="3_xhexq"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_fade.gdshader" id="4_np53g"]
-[ext_resource type="PackedScene" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
+[ext_resource type="PackedScene" uid="uid://cdank381erh0u" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_dither.gdshader" id="6_s3jbn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rs0bt"]
@@ -61,6 +61,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
 texture = ExtResource("3_ce5vw")
 hframes = 2
 vframes = 3
+
+[node name="StaminaLabel" type="Label" parent="CameraRoot2D/Camera2D"]
+unique_name_in_owner = true
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -550.0
+offset_top = 273.0
+offset_right = -412.0
+offset_bottom = 299.0
+grow_vertical = 0
+text = "STAMINA:"
 
 [node name="dither_cont" type="SubViewportContainer" parent="."]
 visible = false
