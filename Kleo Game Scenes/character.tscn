@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=13 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
@@ -7,6 +7,11 @@
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_fade.gdshader" id="4_np53g"]
 [ext_resource type="PackedScene" uid="uid://cdank381erh0u" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_dither.gdshader" id="6_s3jbn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jqou7"]
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rs0bt"]
 shader = ExtResource("6_s3jbn")
@@ -73,6 +78,7 @@ offset_right = -412.0
 offset_bottom = 299.0
 grow_vertical = 0
 text = "STAMINA:"
+label_settings = SubResource("LabelSettings_jqou7")
 
 [node name="dither_cont" type="SubViewportContainer" parent="."]
 visible = false
