@@ -106,7 +106,7 @@ func _physics_process(delta):
 		shoot_hitscan()
 	
 	#FOV
-	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED)
+	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED*MOVE_SPEED)
 	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped)
 	cam.fov = lerp(cam.fov, targetFov, delta * 8)
 	
