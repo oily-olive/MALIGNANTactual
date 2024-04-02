@@ -9,6 +9,8 @@ extends CharacterBody3D
 @export var MOUSE_SENSITIVITY = 0.005
 @export var MAX_STAMINA = 100.0
 @export var MOVE_SPEED = 6.5
+@export var CONCENTRATION = 100.0
+@export var MAX_CONCENTRATION = 100.0
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
