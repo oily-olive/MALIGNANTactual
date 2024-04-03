@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://b5tn3cjrnpim4"]
+
+[ext_resource type="PackedScene" uid="uid://bu8fd3tkq4kfn" path="res://Kleo Game Models/placeholder_hammer.blend" id="1_j0bjv"]
+[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="2_lhgy8"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_54y4p"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xs3og"]
+render_priority = 0
+shader = ExtResource("2_lhgy8")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(0.278431, 0.278431, 0.278431, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(1, 1)
+shader_parameter/albedo = SubResource("CanvasTexture_54y4p")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_834l4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_80cl7"]
+render_priority = 0
+shader = ExtResource("2_lhgy8")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(0.419608, 0.211765, 0, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(1, 1)
+shader_parameter/albedo = SubResource("CanvasTexture_834l4")
+
+[node name="placeholder_hammer" instance=ExtResource("1_j0bjv")]
+
+[node name="Cube" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_xs3og")
+
+[node name="Cube_001" parent="." index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_80cl7")
