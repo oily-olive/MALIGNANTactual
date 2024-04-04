@@ -11,6 +11,8 @@ extends CharacterBody3D
 @export var MOVE_SPEED = 6.5
 @export var CONCENTRATION = 100.0
 @export var MAX_CONCENTRATION = 100.0
+@export var STAMINA_REGEN_COOLDOWN = 1
+@export var STAMINA_REGEN_COOLDOWN_MAX = 1
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -70,12 +72,23 @@ func _physics_process(delta):
 			if Input.is_action_pressed("sprint"):
 				STAMINA = STAMINA - 17.5
 
-	if not Input.is_action_pressed("sprint") && STAMINA < MAX_STAMINA && is_on_floor():
+
+#STAMINA
+	if not Input.is_action_pressed("sprint") && STAMINA_REGEN_COOLDOWN == STAMINA_REGEN_COOLDOWN_MAX && STAMINA < MAX_STAMINA && is_on_floor():
 		STAMINA = STAMINA + 0.75
 	if STAMINA > MAX_STAMINA:
 		STAMINA = MAX_STAMINA
 	if STAMINA < 0:
 		STAMINA = 0
+	if STAMINA_REGEN_COOLDOWN < STAMINA_REGEN_COOLDOWN_MAX && not Input.is_action_pressed("sprint"):
+		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN + 0.025
+	if Input.is_action_pressed("sprint") or not is_on_floor():
+		STAMINA_REGEN_COOLDOWN = 0
+	if STAMINA_REGEN_COOLDOWN > STAMINA_REGEN_COOLDOWN_MAX:
+		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
+	
+	
+	
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
