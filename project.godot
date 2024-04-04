@@ -16,6 +16,11 @@ config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://malignant_icon_placeholder.png"
 config/windows_native_icon="res://icon.ico"
 
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
 [input]
 
 moveLeft={
