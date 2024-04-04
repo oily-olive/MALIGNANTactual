@@ -16,7 +16,8 @@ extends CharacterBody3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
 @onready var raycast := $CameraRoot/Camera3D/RayCast3D
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
-@onready var staminaLabel := $CameraRoot2D/Camera2D/StaminaLabel
+@onready var staminaLabel := $CameraRoot2D/ui_container_bottomleft/StaminaLabel
+@onready var stepsound := $walk_sound
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -81,6 +82,8 @@ func _physics_process(delta):
 		if is_on_floor():
 			velocity.x = lerp(velocity.x, direction.x * MOVE_SPEED, delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * MOVE_SPEED, delta * 7.0)
+			#if stepsound.playing == false:
+				#stepsound.play()
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
 				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * MOVE_SPEED), delta * 3.5)
 				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * MOVE_SPEED), delta * 3.5)
