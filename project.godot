@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="MALIGNANT"
+config/tags=PackedStringArray("3d", "shooter")
 run/main_scene="res://Kleo Game Scenes/testworld.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://malignant_icon_placeholder.png"
