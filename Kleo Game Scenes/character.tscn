@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=16 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
@@ -13,6 +13,10 @@
 outline_size = 8
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_k53dj"]
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rs0bt"]
 shader = ExtResource("6_s3jbn")
@@ -102,6 +106,18 @@ hframes = 2
 vframes = 3
 
 [node name="Camera2D" type="Camera2D" parent="CameraRoot2D"]
+
+[node name="hp_container" type="HBoxContainer" parent="CameraRoot2D"]
+offset_left = -570.0
+offset_top = 243.0
+offset_right = -530.0
+offset_bottom = 283.0
+
+[node name="HPLabel" type="Label" parent="CameraRoot2D/hp_container"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HP:"
+label_settings = SubResource("LabelSettings_k53dj")
 
 [node name="dither_cont" type="SubViewportContainer" parent="."]
 visible = false
