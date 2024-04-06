@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=19 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
@@ -6,8 +6,29 @@
 [ext_resource type="PackedScene" uid="uid://b5ullklw3cyxk" path="res://Kleo Game Scenes/shotgun.tscn" id="3_xhexq"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_fade.gdshader" id="4_np53g"]
 [ext_resource type="PackedScene" uid="uid://cdank381erh0u" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
+[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/psx_filter.gdshader" id="5_udbgb"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_dither.gdshader" id="6_s3jbn"]
 [ext_resource type="AudioStream" uid="uid://da1yqe5e1btvg" path="res://sound/sfx/jump_impact_2.wav" id="8_5ooss"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d2h70"]
+render_priority = 0
+shader = ExtResource("5_udbgb")
+shader_parameter/enable_fog = true
+shader_parameter/fog_color = Color(0.537255, 0.392157, 0.392157, 1)
+shader_parameter/noise_color = Color(0, 0, 0, 1)
+shader_parameter/fog_distance = 5077.08
+shader_parameter/fog_fade_range = 6000.0
+shader_parameter/enable_noise = false
+shader_parameter/noise_time_fac = 4.0
+shader_parameter/enable_color_limitation = true
+shader_parameter/color_levels = 32
+shader_parameter/enable_dithering = true
+shader_parameter/dither_strength = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_cvboh"]
+material = SubResource("ShaderMaterial_d2h70")
+flip_faces = true
+size = Vector2(2, 2)
 
 [sub_resource type="LabelSettings" id="LabelSettings_jqou7"]
 outline_size = 8
@@ -67,6 +88,10 @@ debug_shape_custom_color = Color(0.670588, 0, 0, 1)
 
 [node name="RayCastEnd" type="Node3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
+
+[node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.001)
+mesh = SubResource("QuadMesh_cvboh")
 
 [node name="CameraRoot2D" type="Node2D" parent="."]
 

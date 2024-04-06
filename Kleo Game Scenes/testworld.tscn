@@ -138,12 +138,13 @@ surface_material_override/0 = ExtResource("3_r5mxc")
 shape = SubResource("ConcavePolygonShape3D_bwyew")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.25, -50)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, -50)
 mesh = SubResource("PlaneMesh_ytj2h")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D4"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_iw0x7")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
@@ -265,4 +266,4 @@ shape = SubResource("ConcavePolygonShape3D_i43sp")
 
 [node name="music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_i7noh")
-volume_db = -8.0
+volume_db = -4.0
