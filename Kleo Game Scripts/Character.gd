@@ -1,24 +1,26 @@
 extends CharacterBody3D
 
 @export var NORMAL_SPEED = 6.5
-@export var SPRINT_SPEED = 50/13
+@export var SPRINT_SPEED = 50.0/13.0
 @export var JUMP_VELOCITY = 6.5
 @export var WALL_JUMP_VELOCITY = 12
 @export var WALL_JUMP_COUNTER = 4
-@export var STAMINA = 100.0
+@export var STAMINA = 100
 @export var MOUSE_SENSITIVITY = 0.005
 @export var MAX_STAMINA = 100.0
 @export var MOVE_SPEED = 6.5
-@export var CONCENTRATION = 100.0
+@export var CONCENTRATION = 100
 @export var MAX_CONCENTRATION = 100.0
 @export var STAMINA_REGEN_COOLDOWN = 1
 @export var STAMINA_REGEN_COOLDOWN_MAX = 1
+@export var HP = 100
+@export var MAX_HP = 100
+@export var MAX_OVERHEAL = 2 * MAX_HP
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
 @onready var raycast := $CameraRoot/Camera3D/RayCast3D
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
-@onready var staminaLabel := $CameraRoot2D/ui_container_bottomleft/StaminaLabel
 @onready var stepsound := $walk_sound
 
 #CAM BOBBING FUNCTION WOOO
@@ -61,8 +63,9 @@ func _physics_process(delta):
 			velocity.y += JUMP_VELOCITY * 0.85
 			WALL_JUMP_COUNTER = WALL_JUMP_COUNTER - 1
 
-	# Stamina Label
-	staminaLabel.text = "STAMINA: " + str(STAMINA)
+	# UI
+	$CameraRoot2D/ui_container_bottomleft/StaminaLabel.text = "STAMINA: " + str(int(STAMINA))
+	$CameraRoot2D/hp_container/HPLabel.text = "HP: " + str(int(HP))
 
 	# Handle jump.
 	if is_on_floor():
@@ -70,10 +73,10 @@ func _physics_process(delta):
 		if Input.is_action_pressed("jump"):
 			velocity.y = JUMP_VELOCITY
 			if Input.is_action_pressed("sprint"):
-				STAMINA = STAMINA - 17.5
+				STAMINA = STAMINA - 25
 
 
-#STAMINA
+	#STAMINA
 	if not Input.is_action_pressed("sprint") && STAMINA_REGEN_COOLDOWN == STAMINA_REGEN_COOLDOWN_MAX && STAMINA < MAX_STAMINA && is_on_floor():
 		STAMINA = STAMINA + 0.75
 	if STAMINA > MAX_STAMINA:
@@ -105,8 +108,8 @@ func _physics_process(delta):
 			velocity.x = lerp(velocity.x, direction.x * MOVE_SPEED * 2, delta * 2.25)
 			velocity.z = lerp(velocity.z, direction.z * MOVE_SPEED * 2, delta * 2.25)
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
-				velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * (13 / 4)) * SPRINT_SPEED, delta * 0.75)
-				velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * (13 / 4)) * SPRINT_SPEED, delta * 0.75)
+				velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
+				velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
 				
 	else:
 		if is_on_floor():
