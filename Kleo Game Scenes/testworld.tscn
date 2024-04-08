@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Kleo Game Scenes/testworld.gd" id="1_x6job"]
 [ext_resource type="Material" uid="uid://bgoiu53shh7gc" path="res://Olive Game Material Overrides/placeholder_ground.tres" id="3_r5mxc"]
 [ext_resource type="Material" uid="uid://c26lvnncn7f2d" path="res://Olive Game Material Overrides/placeholder_wall.tres" id="4_3lusl"]
-[ext_resource type="AudioStream" uid="uid://dpjkyi3opeof8" path="res://sound/music/Cascada de coagulación.mp3" id="6_i7noh"]
+[ext_resource type="AudioStream" uid="uid://c0184thle35lc" path="res://sound/music/Cascada_de_coagulacion.ogg" id="6_2wcpc"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_skaob"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
@@ -144,7 +144,6 @@ mesh = SubResource("PlaneMesh_ytj2h")
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D4"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_iw0x7")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
@@ -265,5 +264,5 @@ mesh = SubResource("BoxMesh_4y160")
 shape = SubResource("ConcavePolygonShape3D_i43sp")
 
 [node name="music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_i7noh")
+stream = ExtResource("6_2wcpc")
 volume_db = -4.0
