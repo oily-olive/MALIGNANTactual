@@ -1,7 +1,7 @@
 [gd_scene load_steps=28 format=3 uid="uid://bi15hhlna83u3"]
 
+[ext_resource type="Script" path="res://Kleo Game Scripts/testworld.gd" id="1_enjh1"]
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="1_hd2yr"]
-[ext_resource type="Script" path="res://Kleo Game Scenes/testworld.gd" id="1_x6job"]
 [ext_resource type="Material" uid="uid://bgoiu53shh7gc" path="res://Olive Game Material Overrides/placeholder_ground.tres" id="3_r5mxc"]
 [ext_resource type="Material" uid="uid://c26lvnncn7f2d" path="res://Olive Game Material Overrides/placeholder_wall.tres" id="4_3lusl"]
 [ext_resource type="AudioStream" uid="uid://c0184thle35lc" path="res://sound/music/Cascada_de_coagulacion.ogg" id="6_2wcpc"]
@@ -113,7 +113,7 @@ data = PackedVector3Array(-5, 0.125, 10, -3.3333, 0.125, 10, -5, -0.125, 10, -3.
 
 [node name="World" type="Node3D"]
 transform = Transform3D(0.999973, -0.00741756, 0, 0.00741756, 0.999973, 0, 0, 0, 1, 0, 0, 0)
-script = ExtResource("1_x6job")
+script = ExtResource("1_enjh1")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vob15")

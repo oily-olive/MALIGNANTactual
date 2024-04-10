@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://c8t8wdpkx6pfg"]
 
-[ext_resource type="Script" path="res://Kleo Game Scenes/bullet_trail.gd" id="1_3mhf2"]
+[ext_resource type="Script" path="res://Kleo Game Scripts/bullet_trail.gd" id="1_chs5s"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qirir"]
 transparency = 1
@@ -37,7 +37,7 @@ size = Vector3(0.03, 0.03, 0.03)
 [node name="BulletTrail" type="MeshInstance3D"]
 material_override = SubResource("StandardMaterial3D_qirir")
 material_overlay = SubResource("StandardMaterial3D_ylevy")
-script = ExtResource("1_3mhf2")
+script = ExtResource("1_chs5s")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.3
