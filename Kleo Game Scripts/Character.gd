@@ -16,12 +16,16 @@ extends CharacterBody3D
 @export var HP = 100
 @export var MAX_HP = 100
 @export var MAX_OVERHEAL = 2 * MAX_HP
+@export var WEAPON = 0
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
+@onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer
 @onready var raycast := $CameraRoot/Camera3D/RayCast3D
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
 @onready var stepsound := $walk_sound
+@onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
+@onready var gun2 := $CameraRoot/Camera3D/double_shotty
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -120,9 +124,30 @@ func _physics_process(delta):
 	t_bob += delta * velocity.length() * float(is_on_floor())
 	cam.transform.origin = headbob(t_bob)
 	
-	#GUN
+	#weapon handling
+	if WEAPON > 3:
+		WEAPON = 1
+	if WEAPON < 1:
+		WEAPON = 3
+	if Input.is_action_just_pressed("weaponScrollUp"):
+		WEAPON = WEAPON - 1
+	if Input.is_action_just_pressed("weaponScrollDown"):
+		WEAPON = WEAPON + 1
+	if WEAPON == 1:
+		gun1.visible = true
+		gun2.visible = false
+	elif WEAPON == 2:
+		gun1.visible = false
+		gun2.visible = true
+	elif WEAPON == 3:
+		gun1.visible = false
+		gun2.visible = false
+	
 	if Input.is_action_pressed("primaryFire"):
-		shoot_hitscan()
+		if WEAPON == 1:
+				shoot_revolver()
+		if WEAPON == 2:
+				shoot_doublebarrel()
 	
 	#FOV
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED)
@@ -137,7 +162,7 @@ func headbob(time) -> Vector3:
 	pos.x = cos(time * BOB_FREQUENCY / 2) * BOB_AMPLITUDE
 	return pos
 
-func shoot_hitscan():
+func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
 		instance = bulletTrail.instantiate()
@@ -149,3 +174,7 @@ func shoot_hitscan():
 		else:
 			instance.init(revolverBarrel.global_position, raycastEnd.global_position)
 		get_parent().add_child(instance)
+		
+func shoot_doublebarrel():
+	if !doublebarrelAnim.is_playing():
+		doublebarrelAnim.play("recoil and reload")
