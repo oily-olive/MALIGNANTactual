@@ -178,3 +178,6 @@ func shoot_revolver():
 func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
 		doublebarrelAnim.play("recoil and reload")
+		var gun_direction = (neck.transform.basis * Vector3(1, 1, 1)).normalized()
+		var newvelocity = lerp(velocity, gun_direction * 13, 1)
+		velocity = newvelocity + velocity
