@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://c7ejmxrhcb08p"]
 
-[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="1_yw7by"]
+[ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="1_5a5xb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ybqt"]
 resource_name = "Material"
@@ -176,7 +176,7 @@ transform = Transform3D(-0.15, 0, 3.80277e-07, 0, 0.15, 0, -3.80277e-07, 0, -0.1
 transform = Transform3D(0.25, 0, 0, 0, 1.03057, -0.19, 0, 0.595, 0.32909, 0, -0.15, -0.08)
 mesh = SubResource("ArrayMesh_k881f")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("1_yw7by")
+surface_material_override/0 = ExtResource("1_5a5xb")
 
 [node name="hammer" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -185,7 +185,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 transform = Transform3D(0.14, 0, 0, 0, 0.0300908, -0.199659, 0, 0.0399318, 0.150454, 0, 0, 0)
 mesh = SubResource("ArrayMesh_jp3oq")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("1_yw7by")
+surface_material_override/0 = ExtResource("1_5a5xb")
 
 [node name="Skeleton3D" type="Skeleton3D" parent="hammer"]
 bones/0/name = "Bone"
@@ -203,7 +203,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0.82)
 transform = Transform3D(0.6, 0, 0, 0, 0, 0.6, 0, -0.52, 0, 0, 0, 0)
 mesh = SubResource("ArrayMesh_01oga")
 skeleton = NodePath("")
-surface_material_override/0 = ExtResource("1_yw7by")
+surface_material_override/0 = ExtResource("1_5a5xb")
 
 [node name="Skeleton3D" type="Skeleton3D" parent="cylinder_spin"]
 bones/0/name = "Bone"

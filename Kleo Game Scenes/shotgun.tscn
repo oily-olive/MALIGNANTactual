@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b5ullklw3cyxk"]
 
 [ext_resource type="PackedScene" uid="uid://crn4ellr5pgf6" path="res://Kleo Game Models/new_shotgun.blend" id="1_h6o0y"]
-[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="2_pfd7i"]
+[ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="2_iap6c"]
 
 [node name="new_shotgun" instance=ExtResource("1_h6o0y")]
 
@@ -9,13 +9,13 @@
 transform = Transform3D(0.312419, 0, 0, 0, 0.0884071, 0.218451, 0, -0.051804, 0.372802, 0, 0.230413, 0.273733)
 
 [node name="Cube_001" parent="hammer/Skeleton3D/Cube_001" index="0"]
-surface_material_override/0 = ExtResource("2_pfd7i")
+surface_material_override/0 = ExtResource("2_iap6c")
 
 [node name="Cylinder" parent="cylinder_reload/Skeleton3D" index="0"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1.00078, 0)
 
 [node name="Cylinder" parent="cylinder_reload/Skeleton3D/Cylinder" index="0"]
-surface_material_override/0 = ExtResource("2_pfd7i")
+surface_material_override/0 = ExtResource("2_iap6c")
 
 [node name="Cube_002" parent="." index="2"]
-surface_material_override/0 = ExtResource("2_pfd7i")
+surface_material_override/0 = ExtResource("2_iap6c")
