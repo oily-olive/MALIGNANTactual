@@ -17,6 +17,7 @@ extends CharacterBody3D
 @export var MAX_HP = 100
 @export var MAX_OVERHEAL = 2 * MAX_HP
 @export var WEAPON = 0
+@export var SPEED = velocity.x + velocity.y + velocity.z
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -26,6 +27,7 @@ extends CharacterBody3D
 @onready var stepsound := $walk_sound
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
+@onready var ch := $CameraRoot2D/ui_container_center/crosshair
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -63,13 +65,11 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 		if is_on_wall_only() and Input.is_action_just_pressed("jump") and WALL_JUMP_COUNTER != 0:
-			velocity = get_wall_normal() * WALL_JUMP_VELOCITY
-			velocity.y += JUMP_VELOCITY * 0.85
-			WALL_JUMP_COUNTER = WALL_JUMP_COUNTER - 1
+			print("fuck you i removed the wall jump because i was losing my goddamn mind")
 
 	# UI
 	$CameraRoot2D/ui_container_bottomleft/StaminaLabel.text = "STAMINA: " + str(int(STAMINA))
-	$CameraRoot2D/hp_container/HPLabel.text = "HP: " + str(int(HP))
+	$CameraRoot2D/ui_container_bottomleft/HPLabel.text = "HP: " + str(int(HP))
 
 	# Handle jump.
 	if is_on_floor():
@@ -134,12 +134,17 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("weaponScrollDown"):
 		WEAPON = WEAPON + 1
 	if WEAPON == 1:
+		ch.frame = 0
+		ch.visible = true
 		gun1.visible = true
 		gun2.visible = false
 	elif WEAPON == 2:
+		ch.frame = 1
+		ch.visible = true
 		gun1.visible = false
 		gun2.visible = true
 	elif WEAPON == 3:
+		ch.visible = false
 		gun1.visible = false
 		gun2.visible = false
 	
@@ -150,8 +155,9 @@ func _physics_process(delta):
 				shoot_doublebarrel()
 	
 	#FOV
-	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED)
-	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped)
+	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
+	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = "SPEED: " + str(int(velocityClamped))
+	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped * 0.75)
 	cam.fov = lerp(cam.fov, targetFov, delta * 8)
 	
 	move_and_slide()
