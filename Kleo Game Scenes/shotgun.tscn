@@ -1,9 +1,52 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5ullklw3cyxk"]
+[gd_scene load_steps=6 format=3 uid="uid://b5ullklw3cyxk"]
 
 [ext_resource type="PackedScene" uid="uid://crn4ellr5pgf6" path="res://Kleo Game Models/new_shotgun.blend" id="1_h6o0y"]
 [ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="2_iap6c"]
 
+[sub_resource type="Animation" id="Animation_d812r"]
+resource_name = "recoil"
+length = 0.8
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.374, -0.377, -0.541, 0.2, 1, 0.374, -0.377, -0.4, 0.8, 1, 0.374, -0.377, -0.541)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.2, 1, 0.101056, 0, 0, 0.994881, 0.8, 1, 0, 0, 0, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("cylinder_reload/Skeleton3D/Cylinder/Cylinder")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.2, 1, 0, 0.587785, 0, 0.809017)
+
+[sub_resource type="Animation" id="Animation_5cuk4"]
+resource_name = "reload"
+length = 1.5
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cylinder_reload")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.1, 1, 0, 0, 0.422618, 0.906308, 1.4, 1, 0, 0, 0.422618, 0.906308, 1.5, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2grnw"]
+_data = {
+"recoil": SubResource("Animation_d812r"),
+"reload": SubResource("Animation_5cuk4")
+}
+
 [node name="new_shotgun" instance=ExtResource("1_h6o0y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374, -0.377, -0.541)
 
 [node name="Cube_001" parent="hammer/Skeleton3D" index="0"]
 transform = Transform3D(0.312419, 0, 0, 0, 0.0884071, 0.218451, 0, -0.051804, 0.372802, 0, 0.230413, 0.273733)
@@ -15,7 +58,13 @@ surface_material_override/0 = ExtResource("2_iap6c")
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1.00078, 0)
 
 [node name="Cylinder" parent="cylinder_reload/Skeleton3D/Cylinder" index="0"]
+transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0, 0, 0)
 surface_material_override/0 = ExtResource("2_iap6c")
 
 [node name="Cube_002" parent="." index="2"]
 surface_material_override/0 = ExtResource("2_iap6c")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
+libraries = {
+"": SubResource("AnimationLibrary_2grnw")
+}
