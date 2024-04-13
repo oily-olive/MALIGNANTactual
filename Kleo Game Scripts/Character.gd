@@ -1,23 +1,24 @@
 extends CharacterBody3D
 
+@export var SPEED_BOOST = 1.0
 @export var NORMAL_SPEED = 6.5
 @export var SPRINT_SPEED = 50.0/13.0
 @export var JUMP_VELOCITY = 6.5
-@export var WALL_JUMP_VELOCITY = 12
+@export var WALL_JUMP_VELOCITY = 12.0
 @export var WALL_JUMP_COUNTER = 4
-@export var STAMINA = 100
+@export var STAMINA = 100.0
 @export var MOUSE_SENSITIVITY = 0.005
 @export var MAX_STAMINA = 100.0
 @export var MOVE_SPEED = 6.5
-@export var CONCENTRATION = 100
+@export var CONCENTRATION = 100.0
 @export var MAX_CONCENTRATION = 100.0
-@export var STAMINA_REGEN_COOLDOWN = 1
-@export var STAMINA_REGEN_COOLDOWN_MAX = 1
-@export var HP = 100
-@export var MAX_HP = 100
-@export var MAX_OVERHEAL = 2 * MAX_HP
-@export var WEAPON = 0
-@export var SPEED = velocity.x + velocity.y + velocity.z
+@export var STAMINA_REGEN_COOLDOWN = 1.0
+@export var STAMINA_REGEN_COOLDOWN_MAX = 1.0
+@export var HP = 100.0
+@export var MAX_HP = 100.0
+@export var MAX_OVERHEAL = 2.0 * MAX_HP
+@export var WEAPON = 1
+@export var BOOST_DURATION = 0.0
 @export var db_firemode = 0
 @export var shotAMMO = 5
 @onready var neck := $CameraRoot
@@ -99,25 +100,34 @@ func _physics_process(delta):
 		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
 	
 	
+	if BOOST_DURATION == 0.0:
+		SPEED_BOOST = 1.0
+		
+	if BOOST_DURATION > 0.0:
+		BOOST_DURATION = BOOST_DURATION - 0.01
+		
+	if BOOST_DURATION < 0.0:
+		BOOST_DURATION = 0.0
+	
 	
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		if is_on_floor():
-			velocity.x = lerp(velocity.x, direction.x * MOVE_SPEED, delta * 7.0)
-			velocity.z = lerp(velocity.z, direction.z * MOVE_SPEED, delta * 7.0)
+			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
+			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
 			#if stepsound.playing == false:
 				#stepsound.play()
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
-				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * MOVE_SPEED), delta * 3.5)
-				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * MOVE_SPEED), delta * 3.5)
+				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
+				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
 				STAMINA = STAMINA - 0.5
 		else:
-			velocity.x = lerp(velocity.x, direction.x * MOVE_SPEED * 2, delta * 2.25)
-			velocity.z = lerp(velocity.z, direction.z * MOVE_SPEED * 2, delta * 2.25)
+			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
+			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
-				velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
-				velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
+				velocity.x = lerp(velocity.x, direction.x * ((MOVE_SPEED * SPEED_BOOST) * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
+				velocity.z = lerp(velocity.z, direction.z * ((MOVE_SPEED * SPEED_BOOST) * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
 				
 	else:
 		if is_on_floor():
@@ -228,4 +238,8 @@ func shoot_revshotgun():
 func reload_revshotgun():
 	if !shottyAnim.is_playing():
 		shottyAnim.play("reload")
+		if shotAMMO > 0:
+			BOOST_DURATION = 2.5
+			SPEED_BOOST = 1.5
 		shotAMMO = 5
+		
