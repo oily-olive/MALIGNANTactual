@@ -18,6 +18,7 @@ extends CharacterBody3D
 @export var MAX_OVERHEAL = 2 * MAX_HP
 @export var WEAPON = 0
 @export var SPEED = velocity.x + velocity.y + velocity.z
+@export var db_firemode = 0
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -154,6 +155,12 @@ func _physics_process(delta):
 		if WEAPON == 2:
 				shoot_doublebarrel()
 	
+	if Input.is_action_pressed("secondaryFire"):
+		if WEAPON == 1:
+			pass
+		if WEAPON == 2:
+			dbshotgun_switch()
+	
 	#FOV
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
 	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = "SPEED: " + str(int(velocityClamped))
@@ -184,6 +191,17 @@ func shoot_revolver():
 func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
 		doublebarrelAnim.play("recoil and reload")
-		var gun_direction = (neck.transform.basis * Vector3(1, 1, 1)).normalized()
-		var newvelocity = lerp(velocity, gun_direction * 13, 1)
-		velocity = newvelocity + velocity
+		if db_firemode == 0:
+			var gun_direction = (neck.transform.basis * Vector3(1, 1, 1)).normalized()
+			var newvelocity = lerp(velocity, gun_direction * 13, 1)
+			velocity = newvelocity + velocity
+		else:
+			pass
+		
+func dbshotgun_switch():
+	if !doublebarrelAnim.is_playing():
+		doublebarrelAnim.play("reload")
+		if db_firemode == 0:
+			db_firemode = 1
+		else:
+			db_firemode = 0
