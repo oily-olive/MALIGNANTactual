@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdank381erh0u"]
+[gd_scene load_steps=6 format=3 uid="uid://cdank381erh0u"]
 
 [ext_resource type="PackedScene" uid="uid://cs2w03wtu1sne" path="res://Kleo Game Models/double_shotty.blend" id="1_20qee"]
 [ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="2_oncq7"]
 
 [sub_resource type="Animation" id="Animation_nf1ck"]
 resource_name = "recoil and reload"
-length = 2.75
+length = 2.6
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -19,9 +19,26 @@ tracks/0/keys = {
 "values": [Vector3(1.5708, 3.14159, 0), Vector3(1.5708, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(1.5708, 3.14159, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_4iui6"]
+resource_name = "reload"
+length = 2.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Armature:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.4, 1.8, 2, 2.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(1.5708, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(1.5708, 3.14159, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ud5mg"]
 _data = {
-"recoil and reload": SubResource("Animation_nf1ck")
+"recoil and reload": SubResource("Animation_nf1ck"),
+"reload": SubResource("Animation_4iui6")
 }
 
 [node name="double_shotty" instance=ExtResource("1_20qee")]
