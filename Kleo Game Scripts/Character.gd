@@ -19,15 +19,18 @@ extends CharacterBody3D
 @export var WEAPON = 0
 @export var SPEED = velocity.x + velocity.y + velocity.z
 @export var db_firemode = 0
+@export var shotAMMO = 5
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
 @onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer
+@onready var shottyAnim := $CameraRoot/Camera3D/new_shotgun/AnimationPlayer
 @onready var raycast := $CameraRoot/Camera3D/RayCast3D
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
 @onready var stepsound := $walk_sound
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
+@onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
 
 #CAM BOBBING FUNCTION WOOO
@@ -134,32 +137,40 @@ func _physics_process(delta):
 		WEAPON = WEAPON - 1
 	if Input.is_action_just_pressed("weaponScrollDown"):
 		WEAPON = WEAPON + 1
+	if shotAMMO == 0:
+		reload_revshotgun()
 	if WEAPON == 1:
 		ch.frame = 0
-		ch.visible = true
 		gun1.visible = true
 		gun2.visible = false
+		gun3.visible = false
 	elif WEAPON == 2:
 		ch.frame = 1
-		ch.visible = true
 		gun1.visible = false
 		gun2.visible = true
+		gun3.visible = false
 	elif WEAPON == 3:
-		ch.visible = false
+		ch.frame = 5
 		gun1.visible = false
 		gun2.visible = false
+		gun3.visible = true
 	
 	if Input.is_action_pressed("primaryFire"):
 		if WEAPON == 1:
-				shoot_revolver()
+			shoot_revolver()
 		if WEAPON == 2:
-				shoot_doublebarrel()
+			shoot_doublebarrel()
+		if WEAPON == 3:
+			shoot_revshotgun()
 	
 	if Input.is_action_pressed("secondaryFire"):
 		if WEAPON == 1:
 			pass
 		if WEAPON == 2:
 			dbshotgun_switch()
+		if WEAPON == 3:
+			if shotAMMO != 5:
+				reload_revshotgun()
 	
 	#FOV
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
@@ -205,3 +216,16 @@ func dbshotgun_switch():
 			db_firemode = 1
 		else:
 			db_firemode = 0
+			
+func shoot_revshotgun():
+	if shotAMMO != 0:
+		if !shottyAnim.is_playing():
+			shottyAnim.play("recoil")
+			shotAMMO = shotAMMO - 1
+	else:
+		pass
+
+func reload_revshotgun():
+	if !shottyAnim.is_playing():
+		shottyAnim.play("reload")
+		shotAMMO = 5
