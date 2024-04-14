@@ -10,17 +10,22 @@ extends CharacterBody3D
 @export var MOUSE_SENSITIVITY = 0.005
 @export var MAX_STAMINA = 100.0
 @export var MOVE_SPEED = 6.5
-@export var CONCENTRATION = 100.0
+@export var CONCENTRATION = 0.0
 @export var MAX_CONCENTRATION = 100.0
 @export var STAMINA_REGEN_COOLDOWN = 1.0
 @export var STAMINA_REGEN_COOLDOWN_MAX = 1.0
 @export var HP = 100.0
 @export var MAX_HP = 100.0
 @export var MAX_OVERHEAL = 2.0 * MAX_HP
-@export var WEAPON = 1
-@export var BOOST_DURATION = 0.0
-@export var db_firemode = 0
-@export var shotAMMO = 5
+var WEAPON = 1
+var BOOST_DURATION = 0.0
+var db_firemode = 0
+var shotAMMO = 5
+var SCORE = 0
+var STYLE = 0.0
+var STYLE_TIMEOUT = 0.0
+var hg = false
+var djh = false
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -183,12 +188,35 @@ func _physics_process(delta):
 				reload_revshotgun()
 	
 	#FOV
+	
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
 	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = "SPEED: " + str(int(velocityClamped))
 	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped * 0.75)
 	cam.fov = lerp(cam.fov, targetFov, delta * 8)
 	
 	move_and_slide()
+	
+	#concentration
+	if CONCENTRATION > MAX_CONCENTRATION:
+		CONCENTRATION = MAX_CONCENTRATION
+	if CONCENTRATION < 0.0:
+		CONCENTRATION = 0.0
+	
+	#style
+	if STYLE_TIMEOUT < 0:
+		STYLE_TIMEOUT = 0
+		
+	if STYLE_TIMEOUT > 0:
+		STYLE_TIMEOUT = STYLE_TIMEOUT - 0.1
+	
+	if STYLE_TIMEOUT == 0:
+		SCORE = SCORE + int(STYLE)
+		CONCENTRATION = CONCENTRATION + (STYLE / 10.0)
+		STYLE = 0
+	
+	$CameraRoot2D/ui_container_topright/Style.text = "STYLE: " + str(int(STYLE))
+	
+	styleb_speed()
 
 func headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -243,3 +271,16 @@ func reload_revshotgun():
 			SPEED_BOOST = 1.5
 		shotAMMO = 5
 		
+func st():
+	STYLE_TIMEOUT = 20.0
+func styleb_speed():
+	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
+	if velocityClamped >= 45 and djh == false:
+		hg = true
+	if hg == true:
+		STYLE = STYLE + 50
+		st()
+		djh = true
+		hg = false
+	if velocityClamped < 30:
+		djh = false
