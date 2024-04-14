@@ -24,6 +24,7 @@ var shotAMMO = 5
 var SCORE = 0
 var STYLE = 0.0
 var STYLE_TIMEOUT = 0.0
+var COMBO = 0
 var hg = false
 var djh = false
 @onready var neck := $CameraRoot
@@ -38,6 +39,7 @@ var djh = false
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
 @onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
+#@onready var bl := %CameraRoot2D/ui_container_topright/BonusesLabel
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -210,11 +212,13 @@ func _physics_process(delta):
 		STYLE_TIMEOUT = STYLE_TIMEOUT - 0.1
 	
 	if STYLE_TIMEOUT == 0:
-		SCORE = SCORE + int(STYLE)
+		SCORE = SCORE + int(STYLE * COMBO)
 		CONCENTRATION = CONCENTRATION + (STYLE / 10.0)
 		STYLE = 0
+		COMBO = 0
 	
-	$CameraRoot2D/ui_container_topright/Style.text = "STYLE: " + str(int(STYLE))
+	$CameraRoot2D/ui_container_topright/StyleLabel.text = "STYLE: " + str(int(STYLE))
+	$CameraRoot2D/ui_container_topleft/ScoreLabel.text = str(SCORE)
 	
 	styleb_speed()
 
@@ -275,11 +279,13 @@ func st():
 	STYLE_TIMEOUT = 20.0
 func styleb_speed():
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
-	if velocityClamped >= 45 and djh == false:
+	if velocityClamped >= 40 and djh == false:
 		hg = true
 	if hg == true:
-		STYLE = STYLE + 50
+		STYLE = STYLE + 100
+		COMBO = COMBO + 1
 		st()
+		#bl.text = bl.text + ("+ SPEED DEMON")
 		djh = true
 		hg = false
 	if velocityClamped < 30:
