@@ -276,7 +276,7 @@ func reload_revshotgun():
 		shotAMMO = 5
 		
 func st():
-	STYLE_TIMEOUT = 20.0
+	STYLE_TIMEOUT = STYLE_TIMEOUT + (20.0 / (COMBO))
 func styleb_speed():
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
 	if velocityClamped >= 40 and djh == false:
