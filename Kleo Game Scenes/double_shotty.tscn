@@ -18,6 +18,20 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(1.5708, 3.14159, 0), Vector3(1.5708, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.78729, 3.14159, 0), Vector3(2.38237, 3.14159, 0), Vector3(1.5708, 3.14159, 0)]
 }
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.374, -0.377, -0.441, 0.5, 1, 0.374, -0.377, -0.541)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0.0436194, 0, 0, 0.999048, 0.5, 1, 0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_4iui6"]
 resource_name = "reload"
@@ -42,6 +56,7 @@ _data = {
 }
 
 [node name="double_shotty" instance=ExtResource("1_20qee")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374, -0.377, -0.541)
 
 [node name="Cube" parent="." index="0"]
 surface_material_override/0 = ExtResource("2_oncq7")

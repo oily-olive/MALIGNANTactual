@@ -26,8 +26,8 @@ stereo = true
 
 [node name="Character" type="CharacterBody3D"]
 script = ExtResource("1_igum2")
-metadata/_edit_horizontal_guides_ = [300.0]
-metadata/_edit_vertical_guides_ = [568.0]
+metadata/_edit_horizontal_guides_ = [300.0, -300.0]
+metadata/_edit_vertical_guides_ = [568.0, -568.0]
 
 [node name="CameraRoot" type="Node3D" parent="."]
 
@@ -65,9 +65,9 @@ mesh = SubResource("BoxMesh_t1j6g")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -570.0
+offset_left = -568.0
 offset_top = 250.0
-offset_right = -494.0
+offset_right = -492.0
 offset_bottom = 300.0
 grow_vertical = 0
 alignment = 1
@@ -128,16 +128,32 @@ label_settings = ExtResource("6_6cijo")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 528.0
-offset_top = -316.0
+offset_left = 514.0
+offset_top = -300.0
 offset_right = 568.0
-offset_bottom = -276.0
+offset_bottom = -260.0
 grow_horizontal = 0
 
-[node name="Style" type="Label" parent="CameraRoot2D/ui_container_topright"]
+[node name="StyleLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "STYLE: "
+label_settings = ExtResource("6_6cijo")
+
+[node name="BonusesLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
+unique_name_in_owner = true
+layout_mode = 2
+text = " "
+
+[node name="ui_container_topleft" type="VBoxContainer" parent="CameraRoot2D"]
+offset_left = -568.0
+offset_top = -300.0
+offset_right = -528.0
+offset_bottom = -260.0
+
+[node name="ScoreLabel" type="Label" parent="CameraRoot2D/ui_container_topleft"]
+unique_name_in_owner = true
+layout_mode = 2
 label_settings = ExtResource("6_6cijo")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
