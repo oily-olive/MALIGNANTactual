@@ -32,7 +32,14 @@ var djh = false
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
 @onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer
 @onready var shottyAnim := $CameraRoot/Camera3D/new_shotgun/AnimationPlayer
-@onready var raycast := $CameraRoot/Camera3D/RayCast3D
+@onready var raycast_r := $CameraRoot/Camera3D/hitscan_01
+@onready var raycast_1 := $CameraRoot/Camera3D/hitscan_02
+@onready var raycast_2 := $CameraRoot/Camera3D/hitscan_03
+@onready var raycast_3 := $CameraRoot/Camera3D/hitscan_04
+@onready var raycast_4 := $CameraRoot/Camera3D/hitscan_05
+@onready var raycast_db_u := $CameraRoot/Camera3D/hitscan_06
+@onready var raycast_db_l := $CameraRoot/Camera3D/hitscan_07
+@onready var raycast_melee := $CameraRoot/Camera3D/hitscan_08
 @onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
 @onready var stepsound := $walk_sound
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
@@ -40,6 +47,7 @@ var djh = false
 @onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
 #@onready var bl := %CameraRoot2D/ui_container_topright/BonusesLabel
+@onready var cl := %ComboLabel
 
 #CAM BOBBING FUNCTION WOOO
 @export var BOB_FREQUENCY = 1.5
@@ -219,6 +227,11 @@ func _physics_process(delta):
 	
 	$CameraRoot2D/ui_container_topright/StyleLabel.text = "STYLE: " + str(int(STYLE))
 	$CameraRoot2D/ui_container_topleft/ScoreLabel.text = str(SCORE)
+	if COMBO >= 2:
+		cl.visible = true
+	else:
+		cl.visible = false
+	cl.text = "COMBO x" + str(COMBO)
 	
 	styleb_speed()
 
@@ -232,8 +245,8 @@ func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
 		instance = bulletTrail.instantiate()
-		if raycast.is_colliding():
-			instance.init(revolverBarrel.global_position, raycast.get_collision_point())
+		if raycast_r.is_colliding():
+			instance.init(revolverBarrel.global_position, raycast_r.get_collision_point())
 			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
 			#add a check for enemies
 			#add a way to make bulletholes on surfaces
@@ -285,7 +298,7 @@ func styleb_speed():
 		STYLE = STYLE + 100
 		COMBO = COMBO + 1
 		st()
-		#bl.text = bl.text + ("+ SPEED DEMON")
+		#bl.text = str(bl.text) + ("+ SPEED DEMON")
 		djh = true
 		hg = false
 	if velocityClamped < 30:
