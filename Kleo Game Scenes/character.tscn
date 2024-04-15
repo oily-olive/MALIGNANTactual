@@ -47,7 +47,7 @@ visible = false
 transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374, -0.377, -0.541)
 visible = false
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraRoot/Camera3D"]
+[node name="hitscan_01" type="RayCast3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.00394)
 target_position = Vector3(0, 0, -100)
 collide_with_areas = true
@@ -57,7 +57,43 @@ debug_shape_custom_color = Color(0.670588, 0, 0, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
 
 [node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
+visible = false
 mesh = SubResource("BoxMesh_t1j6g")
+
+[node name="hitscan_02" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(0, -8, -100)
+collide_with_areas = true
+
+[node name="hitscan_03" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(0, 8, -100)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.901961, 0, 0.686275, 1)
+
+[node name="hitscan_04" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(8, 0, -100)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.65098, 0.356863, 0, 1)
+
+[node name="hitscan_05" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(-8, 0, -100)
+
+[node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -1)
+target_position = Vector3(0, -0.5, -100)
+collide_with_areas = true
+
+[node name="hitscan_07" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -1)
+target_position = Vector3(0, 0.5, -100)
+collide_with_areas = true
+
+[node name="hitscan_08" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(0, 0, -1)
 
 [node name="CameraRoot2D" type="Node2D" parent="."]
 
@@ -140,8 +176,16 @@ layout_mode = 2
 text = "STYLE: "
 label_settings = ExtResource("6_6cijo")
 
+[node name="ComboLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "COMBO x"
+label_settings = ExtResource("6_6cijo")
+
 [node name="BonusesLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = " "
 
