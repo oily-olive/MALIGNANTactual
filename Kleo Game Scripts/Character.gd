@@ -65,15 +65,22 @@ const FOV_MULTIPLIER = 1.01
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func hitstop_standard():
+	$hitstop_sound.play()
+	Engine.time_scale = 0
+	await get_tree().create_timer(0.25, true, false, true).timeout
+	Engine.time_scale = 1
+
 func _unhandled_input(event): # Window Activity and Camera Movement
 	if event is InputEventMouseButton:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	elif event.is_action_pressed("ui_cancel"): # ui_cancel = esc key
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	var time_s = Engine.time_scale
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			neck.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-			cam.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
+			neck.rotate_y(-event.relative.x * MOUSE_SENSITIVITY * time_s)
+			cam.rotate_x(-event.relative.y * MOUSE_SENSITIVITY * time_s)
 			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
 func _ready():
@@ -196,6 +203,10 @@ func _physics_process(delta):
 		if WEAPON == 3:
 			if shotAMMO != 5:
 				reload_revshotgun()
+	
+	if Input.is_action_just_pressed("tertiaryFire"):
+		#hitstop_standard()
+		pass
 	
 	#FOV
 	
