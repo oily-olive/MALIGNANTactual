@@ -25,8 +25,8 @@ var SCORE = 0
 var STYLE = 0.0
 var STYLE_TIMEOUT = 0.0
 var COMBO = 0
-var hg = false
-var djh = false
+var speedCashout = false
+var topSpeedChecker = false
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -244,7 +244,7 @@ func _physics_process(delta):
 		cl.visible = false
 	cl.text = "COMBO x" + str(COMBO)
 	
-	styleb_speed()
+	stylebonus_speed()
 
 func headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -299,18 +299,18 @@ func reload_revshotgun():
 			SPEED_BOOST = 1.5
 		shotAMMO = 5
 		
-func st():
+func style_timeout():
 	STYLE_TIMEOUT = STYLE_TIMEOUT + (20.0 / (COMBO))
-func styleb_speed():
+func stylebonus_speed():
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
-	if velocityClamped >= 40 and djh == false:
-		hg = true
-	if hg == true:
-		STYLE = STYLE + 100
-		COMBO = COMBO + 1
-		st()
+	if velocityClamped >= 40 and topSpeedChecker == false: # djh
+		speedCashout = true # hg
+	if speedCashout == true:
+		STYLE += 100 # Same thing as STYLE = STYLE + 100 but shorter lmao
+		COMBO += 1 # Same thing as above
+		style_timeout()
 		#bl.text = str(bl.text) + ("+ SPEED DEMON")
-		djh = true
-		hg = false
+		topSpeedChecker = true
+		speedCashout = false
 	if velocityClamped < 30:
-		djh = false
+		topSpeedChecker = false
