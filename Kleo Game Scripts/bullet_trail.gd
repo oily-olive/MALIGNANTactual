@@ -19,11 +19,11 @@ func init(posBarrel, posTarget):
 func _process(delta):
 	alpha = alpha - (delta * 3.5)
 	material_override.albedo_color.a = alpha
+	await get_tree().create_timer(0.15).timeout
+	$".".visible = false
 
 func trigger_particle(pos, barrelPosition): #reminder to check the enemy scan
 	gunImpact.position = pos
 	gunImpact.look_at(barrelPosition)
 	gunImpact.emitting = true
 
-func _on_timer_timeout():
-	queue_free()
