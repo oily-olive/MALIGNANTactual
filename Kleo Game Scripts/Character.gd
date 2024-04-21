@@ -70,6 +70,10 @@ func hitstop_standard():
 	Engine.time_scale = 0
 	await get_tree().create_timer(0.25, true, false, true).timeout
 	Engine.time_scale = 1
+func dramatic_slowdown():
+	Engine.time_scale = 0.25
+	await get_tree().create_timer(0.75, true, false, true).timeout
+	Engine.time_scale = 1
 
 func _unhandled_input(event): # Window Activity and Camera Movement
 	if event is InputEventMouseButton:
