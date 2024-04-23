@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://ngin5gs0c6mi"]
+
+[ext_resource type="PackedScene" uid="uid://bi4j0xxcpug1n" path="res://Kleo Game Models/bullet.blend" id="1_oot6h"]
+[ext_resource type="Script" path="res://Kleo Game Scripts/bullet.gd" id="2_kfhl2"]
+[ext_resource type="Texture2D" uid="uid://hmcdwesajbod" path="res://Kleo Game Models/textures/texture_10.png" id="2_ohipr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s6khv"]
+albedo_texture = ExtResource("2_ohipr")
+emission_enabled = true
+emission = Color(1, 0.972549, 0.478431, 1)
+emission_energy_multiplier = 0.33
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qrh0f"]
+direction = Vector3(0, 0, -1)
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fe6aw"]
+albedo_color = Color(1, 0.882353, 0.490196, 1)
+emission_enabled = true
+emission = Color(0.992157, 1, 0.729412, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_djf1g"]
+material = SubResource("StandardMaterial3D_fe6aw")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="bullet" instance=ExtResource("1_oot6h")]
+script = ExtResource("2_kfhl2")
+
+[node name="Cone" parent="." index="0"]
+transform = Transform3D(0.25, 0, 0, 0, -1.09278e-08, -0.25, 0, 0.25, -1.09278e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_s6khv")
+
+[node name="RayCast3D" type="RayCast3D" parent="." index="1"]
+target_position = Vector3(0, 0, 1)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.572807)
+emitting = false
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_qrh0f")
+draw_pass_1 = SubResource("BoxMesh_djf1g")
+
+[node name="DespawnTimer" type="Timer" parent="." index="3"]
+wait_time = 10.0
+one_shot = true
+autostart = true
