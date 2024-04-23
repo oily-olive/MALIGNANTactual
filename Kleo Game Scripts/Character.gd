@@ -46,6 +46,10 @@ var topSpeedChecker = false
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
 @onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
+
+# bullet variables
+var bulletStandard := load("res://Kleo Game Scenes/bullet.tscn")
+var instanceBullet
 #@onready var bl := %CameraRoot2D/ui_container_topright/BonusesLabel
 @onready var cl := %ComboLabel
 
@@ -58,7 +62,7 @@ var t_bob = 0.0
 
 var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
-var instance
+var instanceRaycast
 
 const BASE_FOV = 100 #base camera has 100° FOV
 const FOV_MULTIPLIER = 1.01
@@ -69,10 +73,6 @@ func hitstop_standard():
 	$hitstop_sound.play()
 	Engine.time_scale = 0
 	await get_tree().create_timer(0.25, true, false, true).timeout
-	Engine.time_scale = 1
-func dramatic_slowdown():
-	Engine.time_scale = 0.25
-	await get_tree().create_timer(0.75, true, false, true).timeout
 	Engine.time_scale = 1
 
 func _unhandled_input(event): # Window Activity and Camera Movement
@@ -142,8 +142,8 @@ func _physics_process(delta):
 		if is_on_floor():
 			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
-			#if stepsound.playing == false:
-				#stepsound.play()
+			if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
+				stepsound.play()
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
 				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
 				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
@@ -259,15 +259,19 @@ func headbob(time) -> Vector3:
 func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
-		instance = bulletTrail.instantiate()
+		instanceBullet = bulletStandard.instantiate()
+		instanceBullet.position = revolverBarrel.global_position
+		instanceBullet.transform.basis = revolverBarrel.global_transform.basis
+		instanceRaycast = bulletTrail.instantiate()
 		if raycast_r.is_colliding():
-			instance.init(revolverBarrel.global_position, raycast_r.get_collision_point())
+			instanceRaycast.init(revolverBarrel.global_position, raycast_r.get_collision_point())
 			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
 			#add a check for enemies
 			#add a way to make bulletholes on surfaces
 		else:
-			instance.init(revolverBarrel.global_position, raycastEnd.global_position)
-		get_parent().add_child(instance)
+			instanceRaycast.init(revolverBarrel.global_position, raycastEnd.global_position)
+		get_parent().add_child(instanceBullet)
+		get_parent().add_child(instanceRaycast)
 		
 func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
