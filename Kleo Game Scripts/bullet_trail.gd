@@ -20,7 +20,7 @@ func _process(delta):
 	alpha = alpha - (delta * 3.5)
 	material_override.albedo_color.a = alpha
 	await get_tree().create_timer(0.15).timeout
-	$".".visible = false
+	queue_free()
 
 func trigger_particle(pos, barrelPosition): #reminder to check the enemy scan
 	gunImpact.position = pos

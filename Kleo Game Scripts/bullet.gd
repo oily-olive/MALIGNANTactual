@@ -20,5 +20,6 @@ func _process(delta):
 		await get_tree().create_timer(1.0).timeout
 		queue_free()
 
-func _on_timer_timeout():
+func despawn_timer():
+	await get_tree().create_timer(10.0).timeout
 	queue_free()
