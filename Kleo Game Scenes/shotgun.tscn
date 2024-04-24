@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5ullklw3cyxk"]
+[gd_scene load_steps=7 format=3 uid="uid://b5ullklw3cyxk"]
 
 [ext_resource type="PackedScene" uid="uid://crn4ellr5pgf6" path="res://Kleo Game Models/new_shotgun.blend" id="1_h6o0y"]
 [ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="2_iap6c"]
+[ext_resource type="PackedScene" uid="uid://bsm3gsqqqrvwe" path="res://Kleo Game Scenes/shotgun_spread.tscn" id="3_8enss"]
 
 [sub_resource type="Animation" id="Animation_d812r"]
 resource_name = "recoil"
@@ -65,7 +66,10 @@ surface_material_override/0 = ExtResource("2_iap6c")
 surface_material_override/0 = ExtResource("2_iap6c")
 
 [node name="barrel_end" type="Node3D" parent="Cube_002" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -11.75)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1, -11.8641)
+
+[node name="shotgun_spread" parent="Cube_002" index="1" instance=ExtResource("3_8enss")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -11.8641)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
 libraries = {

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cdank381erh0u"]
+[gd_scene load_steps=7 format=3 uid="uid://cdank381erh0u"]
 
 [ext_resource type="PackedScene" uid="uid://cs2w03wtu1sne" path="res://Kleo Game Models/double_shotty.blend" id="1_20qee"]
 [ext_resource type="Material" uid="uid://b48emkbhl4cu2" path="res://Olive Game Material Overrides/placeholder2.tres" id="2_oncq7"]
+[ext_resource type="PackedScene" uid="uid://bsm3gsqqqrvwe" path="res://Kleo Game Scenes/shotgun_spread.tscn" id="3_3pahu"]
 
 [sub_resource type="Animation" id="Animation_nf1ck"]
 resource_name = "recoil and reload"
@@ -72,10 +73,15 @@ transform = Transform3D(1, 2.84217e-14, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 surface_material_override/0 = ExtResource("2_oncq7")
 
 [node name="upper_barrel_end" type="Node3D" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001" index="0"]
-transform = Transform3D(1, 5.45697e-12, -1.04083e-17, 0, 1, 0, 0, 0, 1, 0, 2.655, -0.5)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.655, -0.5)
+
+[node name="shotgun_spread" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end" index="0" instance=ExtResource("3_3pahu")]
 
 [node name="lower_barrel_end" type="Node3D" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.655, 0.5)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.655, 0.5)
+
+[node name="shotgun_spread" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end" index="0" instance=ExtResource("3_3pahu")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 
 [node name="Cube_001" parent="Armature_001/Skeleton3D" index="0"]
 transform = Transform3D(0.312419, 0, 0, 0, 0.0884071, 0.218451, 0, -0.051804, 0.372802, 0, 0.230413, 0.273733)

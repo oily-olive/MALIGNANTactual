@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bsm3gsqqqrvwe"]
+
+[node name="shotgun_spread" type="Node3D"]
+
+[node name="s" type="Node3D" parent="."]
+transform = Transform3D(-0.996195, 0, -0.0871556, 0, 1, 0, 0.0871556, 0, -0.996195, 0, 1, -11.8641)
+
+[node name="d" type="Node3D" parent="."]
+transform = Transform3D(-0.996195, 0, 0.0871558, 0, 1, 0, -0.0871558, 0, -0.996195, 0, 1, -11.8641)
+
+[node name="a" type="Node3D" parent="."]
+transform = Transform3D(-1, 7.6194e-09, 8.70901e-08, 0, 0.996195, -0.0871557, -8.74228e-08, -0.0871557, -0.996195, 0, 1, -11.8641)
+
+[node name="w" type="Node3D" parent="."]
+transform = Transform3D(-1, -7.6194e-09, 8.70901e-08, 0, 0.996195, 0.0871557, -8.74228e-08, 0.0871557, -0.996195, 0, 1, -11.8641)
+
+[node name="s2" type="Node3D" parent="."]
+transform = Transform3D(-0.999743, -0.000514715, -0.0226815, 0, 0.999743, -0.0226873, 0.0226873, -0.0226815, -0.999485, 0, 1, -11.8641)
+
+[node name="d2" type="Node3D" parent="."]
+transform = Transform3D(-0.999743, 0.000475127, -0.0226823, 0, 0.999781, 0.0209424, 0.0226873, 0.020937, -0.999523, 0, 1, -11.8641)
+
+[node name="a2" type="Node3D" parent="."]
+transform = Transform3D(-0.999781, 0.000475128, 0.020937, 0, 0.999743, -0.0226873, -0.0209424, -0.0226824, -0.999523, 0, 1, -11.8641)
+
+[node name="w2" type="Node3D" parent="."]
+transform = Transform3D(-0.999781, -0.000438585, 0.0209378, 0, 0.999781, 0.0209424, -0.0209424, 0.0209378, -0.999561, 0, 1, -11.8641)
