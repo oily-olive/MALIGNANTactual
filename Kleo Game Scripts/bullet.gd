@@ -13,6 +13,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	despawn_timer()
 	position += transform.basis * Vector3(0, 0, SPEED) * delta
 	if rayCastBullet.is_colliding():
 		mesh.visible = false
