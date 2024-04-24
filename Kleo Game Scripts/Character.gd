@@ -33,14 +33,13 @@ var topSpeedChecker = false
 @onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer
 @onready var shottyAnim := $CameraRoot/Camera3D/new_shotgun/AnimationPlayer
 @onready var raycast_r := $CameraRoot/Camera3D/hitscan_01
-@onready var raycast_1 := $CameraRoot/Camera3D/hitscan_02
-@onready var raycast_2 := $CameraRoot/Camera3D/hitscan_03
-@onready var raycast_3 := $CameraRoot/Camera3D/hitscan_04
-@onready var raycast_4 := $CameraRoot/Camera3D/hitscan_05
 @onready var raycast_db_u := $CameraRoot/Camera3D/hitscan_06
 @onready var raycast_db_l := $CameraRoot/Camera3D/hitscan_07
 @onready var raycast_melee := $CameraRoot/Camera3D/hitscan_08
-@onready var raycastEnd := $CameraRoot/Camera3D/RayCastEnd
+@onready var raycastEnd_r := $CameraRoot/Camera3D/hitscan_end_01
+@onready var raycastEnd_db_u := $CameraRoot/Camera3D/hitscan_end_06
+@onready var raycastEnd_db_l := $CameraRoot/Camera3D/hitscan_end_07
+@onready var cross_c := $CameraRoot/Camera3D/hitscan_01/crossover_check
 @onready var stepsound := $walk_sound
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
@@ -59,10 +58,14 @@ const BOB_AMPLITUDE = 0.08
 var t_bob = 0.0
 
 @onready var revolverBarrel := $CameraRoot/Camera3D/plchld_revolver_better/BarrelEnd
+@onready var dbBarrel_u := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end
+@onready var dbBarrel_l := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end
 
 var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
-var instanceRaycast
+var instanceRaycast_r
+var instanceRaycast_db_u
+var instanceRaycast_db_l
 
 const BASE_FOV = 100 #base camera has 100° FOV
 const FOV_MULTIPLIER = 1.01
@@ -259,19 +262,19 @@ func headbob(time) -> Vector3:
 func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
-		instanceBullet = bulletStandard.instantiate()
-		instanceBullet.position = revolverBarrel.global_position
-		instanceBullet.transform.basis = revolverBarrel.global_transform.basis
-		instanceRaycast = bulletTrail.instantiate()
+		#instanceBullet = bulletStandard.instantiate()
+		#instanceBullet.position = revolverBarrel.global_position
+		#instanceBullet.transform.basis = revolverBarrel.global_transform.basis
+		instanceRaycast_r = bulletTrail.instantiate()
 		if raycast_r.is_colliding():
-			instanceRaycast.init(revolverBarrel.global_position, raycast_r.get_collision_point())
+			instanceRaycast_r.init(revolverBarrel.global_position, raycast_r.get_collision_point())
 			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
 			#add a check for enemies
 			#add a way to make bulletholes on surfaces
 		else:
-			instanceRaycast.init(revolverBarrel.global_position, raycastEnd.global_position)
-		get_parent().add_child(instanceBullet)
-		get_parent().add_child(instanceRaycast)
+			instanceRaycast_r.init(revolverBarrel.global_position, raycastEnd_r.global_position)
+		#get_parent().add_child(instanceBullet)
+		get_parent().add_child(instanceRaycast_r)
 		
 func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
@@ -281,7 +284,20 @@ func shoot_doublebarrel():
 			var newvelocity = lerp(velocity, gun_direction * 13, 1)
 			velocity = newvelocity + velocity
 		else:
-			pass
+			if cross_c.is_colliding():
+				hitstop_standard()
+			instanceRaycast_db_u = bulletTrail.instantiate()
+			instanceRaycast_db_l = bulletTrail.instantiate()
+			if raycast_db_u.is_colliding():
+				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycast_db_u.get_collision_point())
+			else:
+				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycastEnd_db_u.global_position)
+			if raycast_db_l.is_colliding():
+				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycast_db_l.get_collision_point())
+			else:
+				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycastEnd_db_l.global_position)
+			get_parent().add_child(instanceRaycast_db_u)
+			get_parent().add_child(instanceRaycast_db_l)
 		
 func dbshotgun_switch():
 	if !doublebarrelAnim.is_playing():
