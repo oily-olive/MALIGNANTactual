@@ -1,0 +1,204 @@
+[gd_scene load_steps=15 format=3 uid="uid://ddg1hwbx1w5xl"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
+[ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
+[ext_resource type="Texture2D" uid="uid://cyn03qprx6lvf" path="res://Kleo Game Sprites/crosshairs.png" id="3_ce5vw"]
+[ext_resource type="PackedScene" uid="uid://b5ullklw3cyxk" path="res://Kleo Game Scenes/shotgun.tscn" id="3_xhexq"]
+[ext_resource type="PackedScene" uid="uid://cdank381erh0u" path="res://Kleo Game Scenes/double_shotty.tscn" id="4_pyyou"]
+[ext_resource type="Material" uid="uid://dw6webk13k0hj" path="res://Olive Game Material Overrides/psx_filter.tres" id="5_ojw3w"]
+[ext_resource type="LabelSettings" uid="uid://c6i5e62bqc3jv" path="res://label thingies/font1.tres" id="6_6cijo"]
+[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_0rsev"]
+[ext_resource type="AudioStream" uid="uid://bfyjw6s0pagqm" path="res://sound/sfx/jump_impact_2.wav" id="8_5ooss"]
+[ext_resource type="AudioStream" uid="uid://whayhxdk8oei" path="res://sound/sfx/jump_impact_short.wav" id="9_mox8n"]
+[ext_resource type="AudioStream" uid="uid://cg33iw1wpt1mb" path="res://sound/sfx/hitstop.ogg" id="11_l448n"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_t1j6g"]
+material = ExtResource("5_ojw3w")
+size = Vector3(2, 2, 2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1812g"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
+material = ExtResource("7_0rsev")
+
+[node name="Character" type="CharacterBody3D"]
+script = ExtResource("1_igum2")
+metadata/_edit_horizontal_guides_ = [300.0, -300.0]
+metadata/_edit_vertical_guides_ = [568.0, -568.0]
+
+[node name="CameraRoot" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.631373, 0)
+current = true
+fov = 100.0
+
+[node name="plchld_revolver_better" parent="CameraRoot/Camera3D" instance=ExtResource("2_t7emm")]
+transform = Transform3D(-0.15, 0, -2.26494e-08, 0, 0.15, 0, 2.26494e-08, 0, -0.15, 0.591, -0.344, -0.401)
+
+[node name="new_shotgun" parent="CameraRoot/Camera3D" instance=ExtResource("3_xhexq")]
+transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374086, -0.376776, -0.541138)
+visible = false
+
+[node name="double_shotty" parent="CameraRoot/Camera3D" instance=ExtResource("4_pyyou")]
+transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374, -0.377, -0.541)
+visible = false
+
+[node name="hitscan_01" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.00394)
+target_position = Vector3(0, 0, -100)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.670588, 0, 0, 1)
+
+[node name="crossover_check" type="RayCast3D" parent="CameraRoot/Camera3D/hitscan_01"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -19)
+target_position = Vector3(0, 0, -2)
+
+[node name="hitscan_end_01" type="Node3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
+
+[node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
+mesh = SubResource("BoxMesh_t1j6g")
+
+[node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -1)
+target_position = Vector3(0, -0.5, -100)
+collide_with_areas = true
+debug_shape_custom_color = Color(0, 1, 0, 1)
+
+[node name="hitscan_end_06" type="Node3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -100)
+
+[node name="hitscan_07" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -1)
+target_position = Vector3(0, 0.5, -100)
+collide_with_areas = true
+debug_shape_custom_color = Color(0, 0, 1, 1)
+
+[node name="hitscan_end_07" type="Node3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -100)
+
+[node name="hitscan_08" type="RayCast3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+target_position = Vector3(0, 0, -1)
+
+[node name="CameraRoot2D" type="Node2D" parent="."]
+
+[node name="ui_container_bottomleft" type="VBoxContainer" parent="CameraRoot2D"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -568.0
+offset_top = 250.0
+offset_right = -492.0
+offset_bottom = 300.0
+grow_vertical = 0
+alignment = 1
+
+[node name="HPLabel" type="Label" parent="CameraRoot2D/ui_container_bottomleft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "HP:"
+label_settings = ExtResource("6_6cijo")
+
+[node name="StaminaLabel" type="Label" parent="CameraRoot2D/ui_container_bottomleft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "STAMINA:"
+label_settings = ExtResource("6_6cijo")
+
+[node name="ui_container_center" type="HBoxContainer" parent="CameraRoot2D"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="crosshair" type="Sprite2D" parent="CameraRoot2D/ui_container_center"]
+position = Vector2(20, 20)
+texture = ExtResource("3_ce5vw")
+hframes = 2
+vframes = 3
+
+[node name="Camera2D" type="Camera2D" parent="CameraRoot2D"]
+
+[node name="ui_container_bottomright" type="VBoxContainer" parent="CameraRoot2D"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 512.0
+offset_top = 277.0
+offset_right = 568.0
+offset_bottom = 317.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SpeedLabel" type="Label" parent="CameraRoot2D/ui_container_bottomright"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SPEED: "
+label_settings = ExtResource("6_6cijo")
+
+[node name="ui_container_topright" type="VBoxContainer" parent="CameraRoot2D"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 514.0
+offset_top = -300.0
+offset_right = 568.0
+offset_bottom = -260.0
+grow_horizontal = 0
+
+[node name="StyleLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "STYLE: "
+label_settings = ExtResource("6_6cijo")
+
+[node name="ComboLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "COMBO x"
+label_settings = ExtResource("6_6cijo")
+
+[node name="BonusesLabel" type="Label" parent="CameraRoot2D/ui_container_topright"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = " "
+
+[node name="ui_container_topleft" type="VBoxContainer" parent="CameraRoot2D"]
+offset_left = -568.0
+offset_top = -300.0
+offset_right = -528.0
+offset_bottom = -260.0
+
+[node name="ScoreLabel" type="Label" parent="CameraRoot2D/ui_container_topleft"]
+unique_name_in_owner = true
+layout_mode = 2
+label_settings = ExtResource("6_6cijo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1812g")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_v3ad5")
+
+[node name="walk_sound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("9_mox8n")
+max_polyphony = 10
+
+[node name="landing_sound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_5ooss")
+
+[node name="hitstop_sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_l448n")
