@@ -86,6 +86,6 @@ tertiaryFire={
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
-scaling_3d/scale=0.25
+scaling_3d/mode=1
+scaling_3d/scale=0.33
+scaling_3d/fsr_sharpness=0.0
