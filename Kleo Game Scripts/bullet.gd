@@ -1,6 +1,6 @@
 extends Node3D
 
-const SPEED = 275.0
+const SPEED = 50
 @onready var mesh := $Cone
 @onready var rayCastBullet := $RayCast3D
 @onready var particleImpact := $GPUParticles3D

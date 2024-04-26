@@ -129,6 +129,7 @@ func _ready():
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _physics_process(delta):
+	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -180,6 +181,7 @@ func _physics_process(delta):
 			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
 			if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
+				stepsound.pitch_scale = velocityClamped/10
 				stepsound.play()
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
 				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
@@ -251,7 +253,7 @@ func _physics_process(delta):
 	
 	#FOV
 	
-	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
+
 	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = "SPEED: " + str(int(velocityClamped))
 	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped * 0.75)
 	cam.fov = lerp(cam.fov, targetFov, delta * 8)
@@ -311,7 +313,7 @@ func shoot_revolver():
 		get_parent().add_child(instanceRaycast_r)
 		
 		
-#behold, the bane of my existence. this function has caused me so much goddamn pain that i would honestly rather pretend it doesn't exist.
+#behold, the folly of man.
 func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
 		doublebarrelAnim.play("recoil and reload")
