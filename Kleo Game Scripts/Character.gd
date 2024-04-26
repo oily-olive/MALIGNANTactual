@@ -254,7 +254,6 @@ func _physics_process(delta):
 	#FOV
 	
 
-	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = "SPEED: " + str(int(velocityClamped))
 	var targetFov = BASE_FOV + (FOV_MULTIPLIER * velocityClamped * 0.75)
 	cam.fov = lerp(cam.fov, targetFov, delta * 8)
 	
@@ -318,7 +317,11 @@ func shoot_doublebarrel():
 	if !doublebarrelAnim.is_playing():
 		doublebarrelAnim.play("recoil and reload")
 		if db_firemode == 0:
-			var gun_direction = neck.transform.basis * Vector3(0,(JUMP_VELOCITY/10.0),0.55)
+			var basis_x = cam.rotation_degrees.x
+			var vector_y = (-1 * (basis_x * (10.0 / 9.0))) / 100.0
+			$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = str(vector_y)
+			var vector_z = abs((((abs(basis_x)) * (10.0 / 9.0)) / 100.0) - 1)
+			var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
 			var newvelocity = lerp(velocity, gun_direction * 13, 1)
 			velocity += newvelocity
 			if true:
