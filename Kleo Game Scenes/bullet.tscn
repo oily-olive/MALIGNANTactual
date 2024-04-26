@@ -1,43 +1,58 @@
-[gd_scene load_steps=8 format=3 uid="uid://ngin5gs0c6mi"]
+[gd_scene load_steps=7 format=3 uid="uid://d3tnd8q4mtrgf"]
 
-[ext_resource type="PackedScene" uid="uid://bi4j0xxcpug1n" path="res://Kleo Game Models/bullet.blend" id="1_oot6h"]
 [ext_resource type="Script" path="res://Kleo Game Scripts/bullet.gd" id="2_kfhl2"]
-[ext_resource type="Texture2D" uid="uid://hmcdwesajbod" path="res://Kleo Game Models/textures/texture_10.png" id="2_ohipr"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s6khv"]
-albedo_texture = ExtResource("2_ohipr")
+[sub_resource type="BoxMesh" id="BoxMesh_4q6mf"]
+size = Vector3(0.1, 0.1, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhnp8"]
+albedo_color = Color(1, 1, 0, 1)
 emission_enabled = true
-emission = Color(1, 0.972549, 0.478431, 1)
-emission_energy_multiplier = 0.33
+emission = Color(1, 1, 0, 1)
+rim_enabled = true
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qrh0f"]
-direction = Vector3(0, 0, -1)
-initial_velocity_min = 3.0
-initial_velocity_max = 5.0
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yswlf"]
+lifetime_randomness = 0.1
+emission_shape_offset = Vector3(0, 1, 0)
+inherit_velocity_ratio = 1.0
+direction = Vector3(0, 20, -1)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 1.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fe6aw"]
-albedo_color = Color(1, 0.882353, 0.490196, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cgr8w"]
+albedo_color = Color(1, 1, 0, 1)
 emission_enabled = true
-emission = Color(0.992157, 1, 0.729412, 1)
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 8.0
+rim_enabled = true
 
-[sub_resource type="BoxMesh" id="BoxMesh_djf1g"]
-material = SubResource("StandardMaterial3D_fe6aw")
-size = Vector3(0.1, 0.1, 0.1)
+[sub_resource type="BoxMesh" id="BoxMesh_wct2y"]
+material = SubResource("StandardMaterial3D_cgr8w")
+size = Vector3(0.04, 0.04, 0.04)
 
-[node name="bullet" instance=ExtResource("1_oot6h")]
+[node name="bullet" type="Node3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 script = ExtResource("2_kfhl2")
 
-[node name="Cone" parent="." index="0"]
-transform = Transform3D(0.25, 0, 0, 0, -1.09278e-08, -0.25, 0, 0.25, -1.09278e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_s6khv")
+[node name="Cone" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_4q6mf")
+surface_material_override/0 = SubResource("StandardMaterial3D_vhnp8")
 
-[node name="RayCast3D" type="RayCast3D" parent="." index="1"]
-target_position = Vector3(0, 0, 1)
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.64221e-08, 0, 0.796624)
+target_position = Vector3(0, 0, 2.5)
+collide_with_areas = true
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.572807)
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1967e-07, 0, -0.626476)
 emitting = false
+lifetime = 1.75
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_qrh0f")
-draw_pass_1 = SubResource("BoxMesh_djf1g")
+collision_base_size = 0.04
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_yswlf")
+draw_pass_1 = SubResource("BoxMesh_wct2y")

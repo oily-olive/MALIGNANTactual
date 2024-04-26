@@ -73,15 +73,16 @@ transform = Transform3D(1, 2.84217e-14, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 surface_material_override/0 = ExtResource("2_oncq7")
 
 [node name="upper_barrel_end" type="Node3D" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001" index="0"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.655, -0.5)
+transform = Transform3D(1, 0, 0, 0, 0.052336, 0.99863, 0, -0.99863, 0.052336, 0, 2.655, -0.5)
 
 [node name="shotgun_spread" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end" index="0" instance=ExtResource("3_3pahu")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0)
 
 [node name="lower_barrel_end" type="Node3D" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001" index="1"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.655, 0.5)
+transform = Transform3D(1, 0, 0, 0, -0.052336, 0.99863, 0, -0.99863, -0.052336, 0, 2.655, 0.5)
 
 [node name="shotgun_spread" parent="Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end" index="0" instance=ExtResource("3_3pahu")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0)
 
 [node name="Cube_001" parent="Armature_001/Skeleton3D" index="0"]
 transform = Transform3D(0.312419, 0, 0, 0, 0.0884071, 0.218451, 0, -0.051804, 0.372802, 0, 0.230413, 0.273733)

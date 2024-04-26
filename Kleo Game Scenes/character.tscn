@@ -58,7 +58,6 @@ target_position = Vector3(0, 0, -2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -101.004)
 
 [node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
-visible = false
 mesh = SubResource("BoxMesh_t1j6g")
 
 [node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
