@@ -81,6 +81,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -100)
 [node name="hitscan_08" type="RayCast3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 target_position = Vector3(0, 0, -1)
+collide_with_areas = true
 
 [node name="CameraRoot2D" type="Node2D" parent="."]
 
