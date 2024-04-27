@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://fr3sd0cgfj6s"]
+
+[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="1_1q4p3"]
+[ext_resource type="Texture2D" uid="uid://dy14iquo3jqpt" path="res://Kleo Game Models/textures/texture_05.png" id="2_wu2cg"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1q4p3")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(0.25, 0.25)
+shader_parameter/albedo = ExtResource("2_wu2cg")
