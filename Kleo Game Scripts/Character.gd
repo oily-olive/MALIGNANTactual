@@ -1,22 +1,22 @@
 extends CharacterBody3D
 
-@export var SPEED_BOOST = 1.0
+var SPEED_BOOST = 1.0
 @export var NORMAL_SPEED = 6.5
-@export var SPRINT_SPEED = 50.0/13.0
+var SPRINT_SPEED = 50.0/13.0
 @export var JUMP_VELOCITY = 6.5
 @export var WALL_JUMP_VELOCITY = 12.0
 @export var WALL_JUMP_COUNTER = 4
-@export var STAMINA = 100.0
+var STAMINA = 100.0
 @export var MOUSE_SENSITIVITY = 0.005
 @export var MAX_STAMINA = 100.0
-@export var MOVE_SPEED = 6.5
-@export var CONCENTRATION = 0.0
+var MOVE_SPEED = 6.5
+var CONCENTRATION = 0.0
 @export var MAX_CONCENTRATION = 100.0
 @export var STAMINA_REGEN_COOLDOWN = 1.0
 @export var STAMINA_REGEN_COOLDOWN_MAX = 1.0
-@export var HP = 100.0
+var HP = 100.0
 @export var MAX_HP = 100.0
-@export var MAX_OVERHEAL = 2.0 * MAX_HP
+var MAX_OVERHEAL = 2.0 * MAX_HP
 var WEAPON = 1
 var BOOST_DURATION = 0.0
 var db_firemode = 0
@@ -180,9 +180,9 @@ func _physics_process(delta):
 		if is_on_floor():
 			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
-			if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
-				stepsound.pitch_scale = velocityClamped/10
-				stepsound.play()
+			#if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
+				#stepsound.pitch_scale = velocityClamped/10
+				#stepsound.play()
 			if Input.is_action_pressed("sprint") && STAMINA > 0:
 				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
 				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
