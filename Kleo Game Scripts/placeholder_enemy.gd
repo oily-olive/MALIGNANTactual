@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 @onready var nav_agent = $NavigationAgent3D
 @export var SPEED = 10.0
+var HEALTH = 3.0
 
 func _physics_process(delta):
 	var current_location = global_transform.origin
@@ -9,6 +10,10 @@ func _physics_process(delta):
 	var new_velocity = (next_location - current_location).normalized() * SPEED
 	
 	nav_agent.set_velocity(new_velocity)
+	
+	if HEALTH <= 0.0:
+		#$".".visible = false
+		queue_free()
 
 
 func update_target_location(target_location):
@@ -17,3 +22,6 @@ func update_target_location(target_location):
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	velocity = velocity.move_toward(safe_velocity, .25)
 	move_and_slide()
+
+func get_hit(damage):
+	HEALTH -= damage

@@ -304,7 +304,8 @@ func shoot_revolver():
 		if raycast_r.is_colliding():
 			instanceRaycast_r.init(revolverBarrel.global_position, raycast_r.get_collision_point())
 			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
-			#add a check for enemies
+			if raycast_r.get_collider().is_in_group("enemies"):
+				raycast_r.get_collider().get_hit(1.0)
 			#add a way to make bulletholes on surfaces
 		else:
 			instanceRaycast_r.init(revolverBarrel.global_position, raycastEnd_r.global_position)
@@ -401,16 +402,21 @@ func shoot_doublebarrel():
 				get_parent().add_child(instanceBullet_ns41)
 			
 		else:
-			if cross_c.is_colliding():
+			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard()
+				cross_c.get_collider().get_hit(2.0)
 			instanceRaycast_db_u = bulletTrail.instantiate()
 			instanceRaycast_db_l = bulletTrail.instantiate()
 			if raycast_db_u.is_colliding():
 				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycast_db_u.get_collision_point())
+				if raycast_db_u.get_collider().is_in_group("enemies"):
+					raycast_db_u.get_collider().get_hit(2.0)
 			else:
 				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycastEnd_db_u.global_position)
 			if raycast_db_l.is_colliding():
 				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycast_db_l.get_collision_point())
+				if raycast_db_l.get_collider().is_in_group("enemies"):
+					raycast_db_l.get_collider().get_hit(2.0)
 			else:
 				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycastEnd_db_l.global_position)
 			get_parent().add_child(instanceRaycast_db_u)
@@ -433,6 +439,8 @@ func shoot_revshotgun():
 			if shotAMMO == 0:
 				if raycast_r.is_colliding():
 					instanceRaycast_rs.init(rsBarrel.global_position, raycast_r.get_collision_point())
+					if raycast_r.get_collider().is_in_group("enemies"):
+						raycast_r.get_collider().get_hit(2.0)
 				else:
 					instanceRaycast_rs.init(rsBarrel.global_position, raycastEnd_r.global_position)
 				get_parent().add_child(instanceRaycast_rs)
