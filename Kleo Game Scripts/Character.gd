@@ -27,6 +27,7 @@ var STYLE_TIMEOUT = 0.0
 var COMBO = 0
 var speedCashout = false
 var topSpeedChecker = false
+var amount_rotated = 0.0
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -47,16 +48,8 @@ var topSpeedChecker = false
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
 
 # bullet variables
-var bulletStandard := load("res://Kleo Game Scenes/bullet.tscn")
+var bulletStandard := load("res://Kleo Game Scenes/shotgun_spread.tscn")
 var instanceBullet_s
-var instanceBullet_ns1
-var instanceBullet_ns2
-var instanceBullet_ns3
-var instanceBullet_ns4
-var instanceBullet_ns11
-var instanceBullet_ns21
-var instanceBullet_ns31
-var instanceBullet_ns41
 #@onready var bl := %CameraRoot2D/ui_container_topright/BonusesLabel
 @onready var cl := %ComboLabel
 
@@ -100,16 +93,19 @@ var instanceRaycast_r
 var instanceRaycast_db_u
 var instanceRaycast_db_l
 var instanceRaycast_rs
+var blood_s
+var blood = load("res://Kleo Game Scenes/blood.tscn")
 
 const BASE_FOV = 100 #base camera has 100° FOV
 const FOV_MULTIPLIER = 1.01
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-func hitstop_standard():
-	$hitstop_sound.play()
+func hitstop_standard(legnth):
+	if legnth >= 0.25:
+		$hitstop_sound.play()
 	Engine.time_scale = 0
-	await get_tree().create_timer(0.25, true, false, true).timeout
+	await get_tree().create_timer(legnth, true, false, true).timeout
 	Engine.time_scale = 1
 
 func _unhandled_input(event): # Window Activity and Camera Movement
@@ -121,6 +117,8 @@ func _unhandled_input(event): # Window Activity and Camera Movement
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
 			neck.rotate_y(-event.relative.x * MOUSE_SENSITIVITY * time_s)
+			if not is_on_floor():
+				amount_rotated += ((event.relative.x / (MOUSE_SENSITIVITY * 200.0)) * time_s) / 1260.0
 			cam.rotate_x(-event.relative.y * MOUSE_SENSITIVITY * time_s)
 			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
@@ -140,8 +138,9 @@ func _physics_process(delta):
 	$CameraRoot2D/ui_container_bottomleft/StaminaLabel.text = "STAMINA: " + str(int(STAMINA))
 	$CameraRoot2D/ui_container_bottomleft/HPLabel.text = "HP: " + str(int(HP))
 
-	# Handle jump.
 	if is_on_floor():
+		if amount_rotated != 0.0:
+			reset_rotation_counter()
 		WALL_JUMP_COUNTER = 4
 		if Input.is_action_pressed("jump"):
 			velocity.y = JUMP_VELOCITY
@@ -173,6 +172,7 @@ func _physics_process(delta):
 	if BOOST_DURATION < 0.0:
 		BOOST_DURATION = 0.0
 	
+	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = str(amount_rotated)
 	
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -320,90 +320,25 @@ func shoot_doublebarrel():
 		if db_firemode == 0:
 			var basis_x = cam.rotation_degrees.x
 			var vector_y = (-1 * (basis_x * (10.0 / 9.0))) / 100.0
-			$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = str(vector_y)
 			var vector_z = abs((((abs(basis_x)) * (10.0 / 9.0)) / 100.0) - 1)
 			var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
 			var newvelocity = lerp(velocity, gun_direction * 13, 1)
 			velocity += newvelocity
-			if true:
-				instanceBullet_s = bulletStandard.instantiate()
-				instanceBullet_s.position = dbBarrel_u.global_position
-				instanceBullet_s.transform.basis = dbBarrel_u.global_transform.basis
-				instanceBullet_ns1 = bulletStandard.instantiate()
-				instanceBullet_ns1.position = dbBarrel_u.global_position
-				instanceBullet_ns1.transform.basis = dbBarrel_u1.global_transform.basis
-				instanceBullet_ns2 = bulletStandard.instantiate()
-				instanceBullet_ns2.position = dbBarrel_u.global_position
-				instanceBullet_ns2.transform.basis = dbBarrel_u2.global_transform.basis
-				instanceBullet_ns3 = bulletStandard.instantiate()
-				instanceBullet_ns3.position = dbBarrel_u.global_position
-				instanceBullet_ns3.transform.basis = dbBarrel_u3.global_transform.basis
-				instanceBullet_ns4 = bulletStandard.instantiate()
-				instanceBullet_ns4.position = dbBarrel_u.global_position
-				instanceBullet_ns4.transform.basis = dbBarrel_u4.global_transform.basis
-				instanceBullet_ns11 = bulletStandard.instantiate()
-				instanceBullet_ns11.position = dbBarrel_u.global_position
-				instanceBullet_ns11.transform.basis = dbBarrel_u5.global_transform.basis
-				instanceBullet_ns21 = bulletStandard.instantiate()
-				instanceBullet_ns21.position = dbBarrel_u.global_position
-				instanceBullet_ns21.transform.basis = dbBarrel_u6.global_transform.basis
-				instanceBullet_ns31 = bulletStandard.instantiate()
-				instanceBullet_ns31.position = dbBarrel_u.global_position
-				instanceBullet_ns31.transform.basis = dbBarrel_u7.global_transform.basis
-				instanceBullet_ns41 = bulletStandard.instantiate()
-				instanceBullet_ns41.position = dbBarrel_u.global_position
-				instanceBullet_ns41.transform.basis = dbBarrel_u8.global_transform.basis
-				get_parent().add_child(instanceBullet_s)
-				get_parent().add_child(instanceBullet_ns1)
-				get_parent().add_child(instanceBullet_ns2)
-				get_parent().add_child(instanceBullet_ns3)
-				get_parent().add_child(instanceBullet_ns4)
-				get_parent().add_child(instanceBullet_ns11)
-				get_parent().add_child(instanceBullet_ns21)
-				get_parent().add_child(instanceBullet_ns31)
-				get_parent().add_child(instanceBullet_ns41)
-
-			if true:
-				instanceBullet_s = bulletStandard.instantiate()
-				instanceBullet_s.position = dbBarrel_l.global_position
-				instanceBullet_s.transform.basis = dbBarrel_l.global_transform.basis
-				instanceBullet_ns1 = bulletStandard.instantiate()
-				instanceBullet_ns1.position = dbBarrel_l.global_position
-				instanceBullet_ns1.transform.basis = dbBarrel_l1.global_transform.basis
-				instanceBullet_ns2 = bulletStandard.instantiate()
-				instanceBullet_ns2.position = dbBarrel_l.global_position
-				instanceBullet_ns2.transform.basis = dbBarrel_l2.global_transform.basis
-				instanceBullet_ns3 = bulletStandard.instantiate()
-				instanceBullet_ns3.position = dbBarrel_l.global_position
-				instanceBullet_ns3.transform.basis = dbBarrel_l3.global_transform.basis
-				instanceBullet_ns4 = bulletStandard.instantiate()
-				instanceBullet_ns4.position = dbBarrel_l.global_position
-				instanceBullet_ns4.transform.basis = dbBarrel_l4.global_transform.basis
-				instanceBullet_ns11 = bulletStandard.instantiate()
-				instanceBullet_ns11.position = dbBarrel_l.global_position
-				instanceBullet_ns11.transform.basis = dbBarrel_l5.global_transform.basis
-				instanceBullet_ns21 = bulletStandard.instantiate()
-				instanceBullet_ns21.position = dbBarrel_l.global_position
-				instanceBullet_ns21.transform.basis = dbBarrel_l6.global_transform.basis
-				instanceBullet_ns31 = bulletStandard.instantiate()
-				instanceBullet_ns31.position = dbBarrel_l.global_position
-				instanceBullet_ns31.transform.basis = dbBarrel_l7.global_transform.basis
-				instanceBullet_ns41 = bulletStandard.instantiate()
-				instanceBullet_ns41.position = dbBarrel_l.global_position
-				instanceBullet_ns41.transform.basis = dbBarrel_l8.global_transform.basis
-				get_parent().add_child(instanceBullet_s)
-				get_parent().add_child(instanceBullet_ns1)
-				get_parent().add_child(instanceBullet_ns2)
-				get_parent().add_child(instanceBullet_ns3)
-				get_parent().add_child(instanceBullet_ns4)
-				get_parent().add_child(instanceBullet_ns11)
-				get_parent().add_child(instanceBullet_ns21)
-				get_parent().add_child(instanceBullet_ns31)
-				get_parent().add_child(instanceBullet_ns41)
+			#if true:
+				#instanceBullet_s = bulletStandard.instantiate()
+				#instanceBullet_s.position = dbBarrel_u.global_position
+				#instanceBullet_s.transform.basis = dbBarrel_u.global_transform.basis
+				#get_parent().add_child(instanceBullet_s)
+#
+			#if true:
+				#instanceBullet_s = bulletStandard.instantiate()
+				#instanceBullet_s.position = dbBarrel_l.global_position
+				#instanceBullet_s.transform.basis = dbBarrel_l.global_transform.basis
+				#get_parent().add_child(instanceBullet_s)
 			
 		else:
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
-				hitstop_standard()
+				hitstop_standard(0.15)
 				cross_c.get_collider().get_hit(2.0)
 			instanceRaycast_db_u = bulletTrail.instantiate()
 			instanceRaycast_db_l = bulletTrail.instantiate()
@@ -440,47 +375,18 @@ func shoot_revshotgun():
 				if raycast_r.is_colliding():
 					instanceRaycast_rs.init(rsBarrel.global_position, raycast_r.get_collision_point())
 					if raycast_r.get_collider().is_in_group("enemies"):
-						raycast_r.get_collider().get_hit(2.0)
+						raycast_r.get_collider().get_hit(2.0 + abs(amount_rotated))
+						if amount_rotated > 1.0:
+							hitstop_standard(0.15)
+							stylebonus_360()
 				else:
 					instanceRaycast_rs.init(rsBarrel.global_position, raycastEnd_r.global_position)
 				get_parent().add_child(instanceRaycast_rs)
-			else:
-				instanceBullet_s = bulletStandard.instantiate()
-				instanceBullet_s.position = rsBarrel.global_position
-				instanceBullet_s.transform.basis = rsBarrel.global_transform.basis
-				instanceBullet_ns1 = bulletStandard.instantiate()
-				instanceBullet_ns1.position = rsBarrel.global_position
-				instanceBullet_ns1.transform.basis = rsBarrel1.global_transform.basis
-				instanceBullet_ns2 = bulletStandard.instantiate()
-				instanceBullet_ns2.position = rsBarrel.global_position
-				instanceBullet_ns2.transform.basis = rsBarrel2.global_transform.basis
-				instanceBullet_ns3 = bulletStandard.instantiate()
-				instanceBullet_ns3.position = rsBarrel.global_position
-				instanceBullet_ns3.transform.basis = rsBarrel3.global_transform.basis
-				instanceBullet_ns4 = bulletStandard.instantiate()
-				instanceBullet_ns4.position = rsBarrel.global_position
-				instanceBullet_ns4.transform.basis = rsBarrel4.global_transform.basis
-				instanceBullet_ns11 = bulletStandard.instantiate()
-				instanceBullet_ns11.position = rsBarrel.global_position
-				instanceBullet_ns11.transform.basis = rsBarrel11.global_transform.basis
-				instanceBullet_ns21 = bulletStandard.instantiate()
-				instanceBullet_ns21.position = rsBarrel.global_position
-				instanceBullet_ns21.transform.basis = rsBarrel21.global_transform.basis
-				instanceBullet_ns31 = bulletStandard.instantiate()
-				instanceBullet_ns31.position = rsBarrel.global_position
-				instanceBullet_ns31.transform.basis = rsBarrel31.global_transform.basis
-				instanceBullet_ns41 = bulletStandard.instantiate()
-				instanceBullet_ns41.position = rsBarrel.global_position
-				instanceBullet_ns41.transform.basis = rsBarrel41.global_transform.basis
-				get_parent().add_child(instanceBullet_s)
-				get_parent().add_child(instanceBullet_ns1)
-				get_parent().add_child(instanceBullet_ns2)
-				get_parent().add_child(instanceBullet_ns3)
-				get_parent().add_child(instanceBullet_ns4)
-				get_parent().add_child(instanceBullet_ns11)
-				get_parent().add_child(instanceBullet_ns21)
-				get_parent().add_child(instanceBullet_ns31)
-				get_parent().add_child(instanceBullet_ns41)
+			#else:
+				#instanceBullet_s = bulletStandard.instantiate()
+				#instanceBullet_s.position = rsBarrel.global_position
+				#instanceBullet_s.transform.basis = rsBarrel.global_transform.basis
+				#get_parent().add_child(instanceBullet_s)
 	else:
 		pass
 
@@ -507,3 +413,15 @@ func stylebonus_speed():
 		speedCashout = false
 	if velocityClamped < 30:
 		topSpeedChecker = false
+func stylebonus_360():
+	STYLE += 250
+	COMBO += 1
+	style_timeout()
+
+func get_hit_p(damage):
+	HP -= damage
+	
+func reset_rotation_counter():
+	print(str(amount_rotated))
+	await get_tree().create_timer(0.25).timeout
+	amount_rotated = 0.0
