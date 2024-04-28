@@ -21,7 +21,7 @@ size = Vector3(2, 2, 2)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 material = ExtResource("7_0rsev")
 
-[node name="Character" type="CharacterBody3D"]
+[node name="Character" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_igum2")
 metadata/_edit_horizontal_guides_ = [300.0, -300.0]
 metadata/_edit_vertical_guides_ = [568.0, -568.0]
