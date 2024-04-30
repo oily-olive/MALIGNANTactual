@@ -145,8 +145,6 @@ func _physics_process(delta):
 	if BOOST_DURATION < 0.0:
 		BOOST_DURATION = 0.0
 	
-	$CameraRoot2D/ui_container_bottomright/SpeedLabel.text = str(amount_rotated)
-	
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
 	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
@@ -300,8 +298,8 @@ func shoot_doublebarrel():
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard(0.15)
 				cross_c.get_collider().get_hit(2.0)
-			hitscan(raycastEnd_db_u, dbBarrel_u, raycastEnd_db_u, 2.0, true)
-			hitscan(raycastEnd_db_l, dbBarrel_l, raycastEnd_db_l, 2.0, true)
+			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 2.0, true)
+			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 2.0, true)
 		
 func dbshotgun_switch():
 	if !doublebarrelAnim.is_playing():
@@ -363,7 +361,6 @@ func get_hit_p(damage):
 	HP -= damage
 	
 func reset_rotation_counter():
-	print(str(amount_rotated))
 	await get_tree().create_timer(0.25).timeout
 	amount_rotated = 0.0
 
