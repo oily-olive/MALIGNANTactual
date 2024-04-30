@@ -26,17 +26,16 @@ shape = SubResource("CapsuleShape3D_5jtnj")
 target_desired_distance = 1.5
 path_height_offset = 0.5
 avoidance_enabled = true
-neighbor_distance = 5.0
-
-[node name="RayCast3D" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.286503, -0.474579)
-target_position = Vector3(0, 0, -0.5)
+neighbor_distance = 1.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85931, -0.41318)
 mesh = SubResource("BoxMesh_133lu")
 
 [node name="Node3D" type="Node3D" parent="."]
+
+[node name="Node3D2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.627244)
 
 [connection signal="target_reached" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_target_reached"]
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

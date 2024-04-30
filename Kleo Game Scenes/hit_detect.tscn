@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4q2uweuhk26i"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/hit.gd" id="1_molfx"]
+
+[node name="RayCast3D" type="RayCast3D"]
+target_position = Vector3(0, 0, -2)
+hit_from_inside = true
+script = ExtResource("1_molfx")

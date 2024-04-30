@@ -2,26 +2,50 @@
 
 [node name="shotgun_spread" type="Node3D"]
 
-[node name="s" type="Node3D" parent="."]
-transform = Transform3D(-0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, -0.984808, 0, 1, -11.8641)
+[node name="rc2" type="RayCast3D" parent="."]
+target_position = Vector3(0, 10, -100)
 
-[node name="d" type="Node3D" parent="."]
-transform = Transform3D(-0.984808, 0, -0.173648, 0, 1, 0, 0.173648, 0, -0.984808, 0, 1, -11.8641)
+[node name="Node3D" type="Node3D" parent="rc2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -100)
 
-[node name="a" type="Node3D" parent="."]
-transform = Transform3D(-1, -1.51808e-08, -8.60946e-08, 0, 0.984808, -0.173648, 8.74228e-08, -0.173648, -0.984808, 0, 1, -11.8641)
+[node name="rc3" type="RayCast3D" parent="."]
+target_position = Vector3(0, -10, -100)
 
-[node name="w" type="Node3D" parent="."]
-transform = Transform3D(-1, 1.51808e-08, -8.60946e-08, 0, 0.984808, 0.173648, 8.74228e-08, 0.173648, -0.984808, 0, 1, -11.8641)
+[node name="Node3D" type="Node3D" parent="rc3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, -100)
 
-[node name="s2" type="Node3D" parent="."]
-transform = Transform3D(-0.992546, 0.0148521, 0.120961, 0, 0.992546, -0.121869, -0.121869, -0.120961, -0.985148, 0, 1, -11.8641)
+[node name="rc4" type="RayCast3D" parent="."]
+target_position = Vector3(10, 0, -100)
 
-[node name="d2" type="Node3D" parent="."]
-transform = Transform3D(-0.992546, -0.0148521, 0.120961, 0, 0.992546, 0.121869, -0.121869, 0.120961, -0.985147, 0, 1, -11.8641)
+[node name="Node3D" type="Node3D" parent="rc4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -100)
 
-[node name="a2" type="Node3D" parent="."]
-transform = Transform3D(-0.992546, -0.0148521, -0.120961, 0, 0.992546, -0.121869, 0.121869, -0.120961, -0.985147, 0, 1, -11.8641)
+[node name="rc5" type="RayCast3D" parent="."]
+target_position = Vector3(-10, 0, -100)
 
-[node name="w2" type="Node3D" parent="."]
-transform = Transform3D(-0.992546, 0.0148521, -0.120961, 0, 0.992546, 0.121869, 0.121869, 0.120961, -0.985147, 0, 1, -11.8641)
+[node name="Node3D" type="Node3D" parent="rc5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -100)
+
+[node name="rc6" type="RayCast3D" parent="."]
+target_position = Vector3(7.5, 7.5, -100)
+
+[node name="Node3D" type="Node3D" parent="rc6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 7.5, -100)
+
+[node name="rc7" type="RayCast3D" parent="."]
+target_position = Vector3(7.5, -7.5, -100)
+
+[node name="Node3D" type="Node3D" parent="rc7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, -7.5, -100)
+
+[node name="rc8" type="RayCast3D" parent="."]
+target_position = Vector3(-7.5, 7.5, -100)
+
+[node name="Node3D" type="Node3D" parent="rc8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 7.5, -100)
+
+[node name="rc9" type="RayCast3D" parent="."]
+target_position = Vector3(-7.5, -7.5, -100)
+
+[node name="Node3D" type="Node3D" parent="rc9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, -7.5, -100)
