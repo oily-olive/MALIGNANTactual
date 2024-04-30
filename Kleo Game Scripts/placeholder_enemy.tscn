@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://kigi77jdldbv"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/placeholder_enemy.gd" id="1_8o8ya"]
+[ext_resource type="Material" uid="uid://fr3sd0cgfj6s" path="res://Olive Game Material Overrides/placeholder3.tres" id="1_cxslt"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2qhod"]
+material = ExtResource("1_cxslt")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5jtnj"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_133lu"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[node name="enemy" type="CharacterBody3D" groups=["enemies"]]
+script = ExtResource("1_8o8ya")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_2qhod")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_5jtnj")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 1.5
+path_height_offset = 0.5
+avoidance_enabled = true
+neighbor_distance = 1.0
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.767067, -0.474579)
+target_position = Vector3(0, 0, -0.5)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85931, -0.41318)
+mesh = SubResource("BoxMesh_133lu")
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[connection signal="target_reached" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_target_reached"]
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]
