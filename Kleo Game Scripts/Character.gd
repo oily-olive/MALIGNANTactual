@@ -60,39 +60,12 @@ var t_bob = 0.0
 
 @onready var revolverBarrel := $CameraRoot/Camera3D/plchld_revolver_better/BarrelEnd
 @onready var dbBarrel_u := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end
-@onready var dbBarrel_u1 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/s
-@onready var dbBarrel_u2 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/d
-@onready var dbBarrel_u3 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/w
-@onready var dbBarrel_u4 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/a
-@onready var dbBarrel_u5 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/s2
-@onready var dbBarrel_u6 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/d2
-@onready var dbBarrel_u7 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/w2
-@onready var dbBarrel_u8 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end/shotgun_spread/a2
 @onready var dbBarrel_l := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end
-@onready var dbBarrel_l1 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/s
-@onready var dbBarrel_l2 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/d
-@onready var dbBarrel_l3 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/w
-@onready var dbBarrel_l4 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/a
-@onready var dbBarrel_l5 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/s2
-@onready var dbBarrel_l6 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/d2
-@onready var dbBarrel_l7 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/w2
-@onready var dbBarrel_l8 := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end/shotgun_spread/a2
 @onready var rsBarrel := $CameraRoot/Camera3D/new_shotgun/Cube_002/barrel_end
-@onready var rsBarrel1 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/s
-@onready var rsBarrel2 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/d
-@onready var rsBarrel3 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/w
-@onready var rsBarrel4 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/a
-@onready var rsBarrel11 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/s2
-@onready var rsBarrel21 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/d2
-@onready var rsBarrel31 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/w2
-@onready var rsBarrel41 := $CameraRoot/Camera3D/new_shotgun/Cube_002/shotgun_spread/a2
 
 var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
-var instanceRaycast_r
-var instanceRaycast_db_u
-var instanceRaycast_db_l
-var instanceRaycast_rs
+var instanceRaycast
 var blood_s
 var blood = load("res://Kleo Game Scenes/blood.tscn")
 
@@ -118,7 +91,7 @@ func _unhandled_input(event): # Window Activity and Camera Movement
 		if event is InputEventMouseMotion:
 			neck.rotate_y(-event.relative.x * MOUSE_SENSITIVITY * time_s)
 			if not is_on_floor():
-				amount_rotated += ((event.relative.x / (MOUSE_SENSITIVITY * 200.0)) * time_s) / 1260.0
+				amount_rotated += (event.relative.x * time_s) / 1260.0
 			cam.rotate_x(-event.relative.y * MOUSE_SENSITIVITY * time_s)
 			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
@@ -297,20 +270,7 @@ func headbob(time) -> Vector3:
 func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
-		#instanceBullet = bulletStandard.instantiate()
-		#instanceBullet.position = revolverBarrel.global_position
-		#instanceBullet.transform.basis = revolverBarrel.global_transform.basis
-		instanceRaycast_r = bulletTrail.instantiate()
-		if raycast_r.is_colliding():
-			instanceRaycast_r.init(revolverBarrel.global_position, raycast_r.get_collision_point())
-			#instance.trigger_particle(raycast.get_collision_point(),revolverBarrel.global_position)
-			if raycast_r.get_collider().is_in_group("enemies"):
-				raycast_r.get_collider().get_hit(1.0)
-			#add a way to make bulletholes on surfaces
-		else:
-			instanceRaycast_r.init(revolverBarrel.global_position, raycastEnd_r.global_position)
-		#get_parent().add_child(instanceBullet)
-		get_parent().add_child(instanceRaycast_r)
+		hitscan(raycast_r, revolverBarrel, raycastEnd_r, 1.0, true)
 		
 		
 #behold, the folly of man.
@@ -340,22 +300,8 @@ func shoot_doublebarrel():
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard(0.15)
 				cross_c.get_collider().get_hit(2.0)
-			instanceRaycast_db_u = bulletTrail.instantiate()
-			instanceRaycast_db_l = bulletTrail.instantiate()
-			if raycast_db_u.is_colliding():
-				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycast_db_u.get_collision_point())
-				if raycast_db_u.get_collider().is_in_group("enemies"):
-					raycast_db_u.get_collider().get_hit(2.0)
-			else:
-				instanceRaycast_db_u.init(dbBarrel_u.global_position, raycastEnd_db_u.global_position)
-			if raycast_db_l.is_colliding():
-				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycast_db_l.get_collision_point())
-				if raycast_db_l.get_collider().is_in_group("enemies"):
-					raycast_db_l.get_collider().get_hit(2.0)
-			else:
-				instanceRaycast_db_l.init(dbBarrel_l.global_position, raycastEnd_db_l.global_position)
-			get_parent().add_child(instanceRaycast_db_u)
-			get_parent().add_child(instanceRaycast_db_l)
+			hitscan(raycastEnd_db_u, dbBarrel_u, raycastEnd_db_u, 2.0, true)
+			hitscan(raycastEnd_db_l, dbBarrel_l, raycastEnd_db_l, 2.0, true)
 		
 func dbshotgun_switch():
 	if !doublebarrelAnim.is_playing():
@@ -370,23 +316,18 @@ func shoot_revshotgun():
 		if !shottyAnim.is_playing():
 			shottyAnim.play("recoil")
 			shotAMMO = shotAMMO - 1
-			instanceRaycast_rs = bulletTrail.instantiate()
 			if shotAMMO == 0:
-				if raycast_r.is_colliding():
-					instanceRaycast_rs.init(rsBarrel.global_position, raycast_r.get_collision_point())
-					if raycast_r.get_collider().is_in_group("enemies"):
-						raycast_r.get_collider().get_hit(2.0 + abs(amount_rotated))
-						if amount_rotated > 1.0:
-							hitstop_standard(0.15)
-							stylebonus_360()
-				else:
-					instanceRaycast_rs.init(rsBarrel.global_position, raycastEnd_r.global_position)
-				get_parent().add_child(instanceRaycast_rs)
-			#else:
-				#instanceBullet_s = bulletStandard.instantiate()
-				#instanceBullet_s.position = rsBarrel.global_position
-				#instanceBullet_s.transform.basis = rsBarrel.global_transform.basis
-				#get_parent().add_child(instanceBullet_s)
+				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true)
+			else:
+				hitscan(raycast_r, rsBarrel, raycastEnd_r, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8/Node3D, 0.5, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9/Node3D, 0.5, false)
 	else:
 		pass
 
@@ -425,3 +366,15 @@ func reset_rotation_counter():
 	print(str(amount_rotated))
 	await get_tree().create_timer(0.25).timeout
 	amount_rotated = 0.0
+
+func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
+	instanceRaycast = bulletTrail.instantiate()
+	if raycast.is_colliding():
+		if draw_tracer == true:
+			instanceRaycast.init(barrel.global_position, raycast.get_collision_point())
+		if raycast.get_collider().is_in_group("enemies"):
+			raycast.get_collider().get_hit(damage)
+		#add a way to make bulletholes on surfaces
+	elif draw_tracer == true:
+		instanceRaycast.init(barrel.global_position, raycast_end.global_position)
+	get_parent().add_child(instanceRaycast)
