@@ -101,12 +101,14 @@ func _ready():
 
 func _physics_process(delta):
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
-	# Add the gravity.
+
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-		if is_on_wall_only() and Input.is_action_just_pressed("jump") and WALL_JUMP_COUNTER != 0:
-			print("fuck you i removed the wall jump because i was losing my goddamn mind")
-
+		if raycast_melee.is_colliding() and Input.is_action_just_pressed("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
+			velocity = velocity.bounce(raycast_melee.get_collision_normal())
+			if velocity.y <= JUMP_VELOCITY/2.0:
+				velocity.y += JUMP_VELOCITY/2.0
+			WALL_JUMP_COUNTER -= 1
 	# UI
 	$CameraRoot2D/ui_container_bottomleft/StaminaLabel.text = "STAMINA: " + str(int(STAMINA))
 	$CameraRoot2D/ui_container_bottomleft/HPLabel.text = "HP: " + str(int(HP))
