@@ -399,9 +399,7 @@ func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
 		if !raycast.get_collider().is_in_group("enemies"):
 			instanceRaycast.trigger_particle(raycast.get_collision_point(), barrel.global_position)
 			bullet_hole.position = raycast.get_collision_point()
-			bullet_hole.look_at(bullet_hole.global_transform.origin + raycast.get_collision_normal(), Vector3.UP)
-			#if raycast.get_collision_normal() != Vector3.UP and raycast.get_collision_normal() != Vector3.DOWN:
-				#bullet_hole.rotate_object_local(raycast.get_collision_normal(), -90)
+			bullet_hole.set_rotation_degrees(raycast.get_collision_normal() * 180)
 	elif draw_tracer == true:
 		instanceRaycast.init(barrel.global_position, raycast_end.global_position)
 	get_parent().add_child(instanceRaycast)
