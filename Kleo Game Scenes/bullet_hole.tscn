@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dys42c1l865bs"]
+
+[ext_resource type="Texture2D" uid="uid://cvicw4dfw684h" path="res://Kleo Game Sprites/bullet_hole.png" id="1_nlfab"]
+[ext_resource type="Script" path="res://Kleo Game Scripts/bullet_hole.gd" id="2_2fqn3"]
+
+[node name="Decal" type="Decal"]
+size = Vector3(0.1, 0.1, 0.1)
+texture_albedo = ExtResource("1_nlfab")
+script = ExtResource("2_2fqn3")

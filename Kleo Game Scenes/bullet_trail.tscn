@@ -4,18 +4,20 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qirir"]
 transparency = 1
+depth_draw_mode = 1
 albedo_color = Color(1, 0.898039, 0.329412, 1)
+emission_enabled = true
+emission = Color(1, 0.898039, 0.329412, 1)
 rim_enabled = true
 rim = 0.7
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ylevy"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iru5d"]
-albedo_color = Color(0.670588, 0.188235, 0, 1)
-roughness = 0.1
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qiuu6"]
+albedo_color = Color(1, 0.898039, 0.329412, 1)
 emission_enabled = true
-emission = Color(1, 0.85098, 0, 1)
-emission_energy_multiplier = 0.4
+emission = Color(1, 0.898039, 0.329412, 1)
+rim_enabled = true
 
 [sub_resource type="Curve" id="Curve_in473"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.450549), 0.0, 0.0, 0, 0]
@@ -40,7 +42,7 @@ material_overlay = SubResource("StandardMaterial3D_ylevy")
 script = ExtResource("1_chs5s")
 
 [node name="HitImpact" type="GPUParticles3D" parent="."]
-material_override = SubResource("StandardMaterial3D_iru5d")
+material_override = SubResource("StandardMaterial3D_qiuu6")
 emitting = false
 amount = 10
 lifetime = 0.3
