@@ -39,9 +39,9 @@ var is_sliding = false
 @onready var raycast_db_u := $CameraRoot/Camera3D/hitscan_06
 @onready var raycast_db_l := $CameraRoot/Camera3D/hitscan_07
 @onready var raycast_melee := $CameraRoot/Camera3D/hitscan_08
-@onready var raycastEnd_r := $CameraRoot/Camera3D/hitscan_end_01
-@onready var raycastEnd_db_u := $CameraRoot/Camera3D/hitscan_end_06
-@onready var raycastEnd_db_l := $CameraRoot/Camera3D/hitscan_end_07
+@onready var raycastEnd_r := $CameraRoot/Camera3D/hitscan_01/hitscan_end
+@onready var raycastEnd_db_u := $CameraRoot/Camera3D/hitscan_06/hitscan_end
+@onready var raycastEnd_db_l := $CameraRoot/Camera3D/hitscan_07/hitscan_end
 @onready var cross_c := $CameraRoot/Camera3D/hitscan_01/crossover_check
 @onready var stepsound := $walk_sound
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
@@ -299,25 +299,9 @@ func shoot_doublebarrel():
 			var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
 			var newvelocity = lerp(velocity, gun_direction * 13, 1)
 			velocity += newvelocity
-			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc2, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc2/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc3, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc3/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc4, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc4/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc5, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc5/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc6, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc6/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc7, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc7/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc8, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc8/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc9, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc9/Node3D, shotgun_damage, false)
-		
-			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc2, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc2/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc3, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc3/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc4, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc4/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc5, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc5/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc6, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc6/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc7, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc7/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc8, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc8/Node3D, shotgun_damage, false)
-			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc9, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc9/Node3D, shotgun_damage, false)
+			shotgun_spread(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.25, false)
+			await get_tree().create_timer(0.007).timeout
+			shotgun_spread(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.25, false)
 		else:
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard(0.15)
@@ -341,15 +325,7 @@ func shoot_revshotgun():
 			if shotAMMO == 0:
 				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true)
 			else:
-				hitscan(raycast_r, rsBarrel, raycastEnd_r, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8/Node3D, shotgun_damage, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9/Node3D, shotgun_damage, false)
+				shotgun_spread(raycast_r, rsBarrel, raycastEnd_r, 0.25, false)
 	else:
 		pass
 
@@ -412,3 +388,31 @@ func initiate_slide(direction):
 		velocity.x += new_velocity.x
 		velocity.z += new_velocity.z
 		STAMINA -= 20.0
+
+func shotgun_spread(raycast, barrel, raycast_end, damage, draw_tracer):
+	raycast.set_rotation_degrees(Vector3(3,0,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(-3,0,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(0,3,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(0,-3,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(2,2,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(2,-2,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(-2,2,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(-2,-2,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	await get_tree().create_timer(0.01).timeout
+	raycast.set_rotation_degrees(Vector3(0,0,0))
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
