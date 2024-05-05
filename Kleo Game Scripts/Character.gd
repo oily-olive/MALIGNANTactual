@@ -28,6 +28,8 @@ var COMBO = 0
 var speedCashout = false
 var topSpeedChecker = false
 var amount_rotated = 0.0
+var shotgun_damage
+var is_sliding = false
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -66,8 +68,7 @@ var t_bob = 0.0
 var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
 var instanceRaycast
-var blood_s
-var blood = load("res://Kleo Game Scenes/blood.tscn")
+var bullet_decal = load("res://Kleo Game Scenes/bullet_hole.tscn")
 
 const BASE_FOV = 100 #base camera has 100° FOV
 const FOV_MULTIPLIER = 1.01
@@ -104,6 +105,7 @@ func _physics_process(delta):
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+		is_sliding = false
 		if raycast_melee.is_colliding() and Input.is_action_just_pressed("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
 			velocity = velocity.bounce(raycast_melee.get_collision_normal())
 			if velocity.y <= JUMP_VELOCITY/2.0:
@@ -118,21 +120,26 @@ func _physics_process(delta):
 			reset_rotation_counter()
 		WALL_JUMP_COUNTER = 4
 		if Input.is_action_pressed("jump"):
-			velocity.y = JUMP_VELOCITY
-			if Input.is_action_pressed("sprint"):
-				STAMINA = STAMINA - 25
+			if is_sliding == false:
+				velocity.y = JUMP_VELOCITY
+			elif is_sliding == true and STAMINA >= 50.0:
+				velocity.y = JUMP_VELOCITY
+				STAMINA -= 50.0
+			
 
+	if is_sliding == true:
+		cam.set_position(Vector3(0, -0.631, 0))
+	else:
+		cam.set_position(Vector3(0, 0.631, 0))
 
 	#STAMINA
 	if not Input.is_action_pressed("sprint") && STAMINA_REGEN_COOLDOWN == STAMINA_REGEN_COOLDOWN_MAX && STAMINA < MAX_STAMINA && is_on_floor():
 		STAMINA = STAMINA + 0.75
 	if STAMINA > MAX_STAMINA:
 		STAMINA = MAX_STAMINA
-	if STAMINA < 0:
-		STAMINA = 0
 	if STAMINA_REGEN_COOLDOWN < STAMINA_REGEN_COOLDOWN_MAX && not Input.is_action_pressed("sprint"):
 		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN + 0.025
-	if Input.is_action_pressed("sprint") or not is_on_floor():
+	if Input.is_action_pressed("sprint") or not is_on_floor() or is_sliding == true:
 		STAMINA_REGEN_COOLDOWN = 0
 	if STAMINA_REGEN_COOLDOWN > STAMINA_REGEN_COOLDOWN_MAX:
 		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
@@ -147,34 +154,42 @@ func _physics_process(delta):
 	if BOOST_DURATION < 0.0:
 		BOOST_DURATION = 0.0
 	
+	if is_sliding == true and velocityClamped <= MOVE_SPEED:
+		is_sliding = false
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
-	var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		if is_on_floor():
-			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
-			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
-			#if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
-				#stepsound.pitch_scale = velocityClamped/10
-				#stepsound.play()
-			if Input.is_action_pressed("sprint") && STAMINA > 0:
-				velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
-				velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
-				STAMINA = STAMINA - 0.5
-		else:
-			velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
-			velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
-			if Input.is_action_pressed("sprint") && STAMINA > 0:
-				velocity.x = lerp(velocity.x, direction.x * ((MOVE_SPEED * SPEED_BOOST) * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
-				velocity.z = lerp(velocity.z, direction.z * ((MOVE_SPEED * SPEED_BOOST) * (13.0 / 4.0)) * SPRINT_SPEED, delta * 0.75)
+	if is_sliding == false:
+		var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		if is_sliding == false and is_on_floor() and Input.is_action_just_pressed("slide") and STAMINA >= 20.0:
+			initiate_slide(direction)
+		if direction:
+			if is_sliding == false:
+				if is_on_floor():
+					velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
+					velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST), delta * 7.0)
+					#if stepsound.playing == false and (velocity.x != 0 or velocity.z != 0):
+						#stepsound.pitch_scale = velocityClamped/10
+						#stepsound.play()
+					if Input.is_action_pressed("sprint") and STAMINA > 0:
+						velocity.x = lerp(velocity.x, direction.x * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
+						velocity.z = lerp(velocity.z, direction.z * (SPRINT_SPEED * (MOVE_SPEED * SPEED_BOOST)), delta * 3.5)
+						STAMINA = STAMINA - 0.5
+				else:
+					velocity.x = lerp(velocity.x, direction.x * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
+					velocity.z = lerp(velocity.z, direction.z * (MOVE_SPEED * SPEED_BOOST) * 2, delta * 2.25)
 				
+		else:
+			if is_on_floor():
+				velocity.x = move_toward(velocity.x, 0, 0.35)
+				velocity.z = move_toward(velocity.z, 0, 0.35)
 	else:
 		if is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, 0.35)
-			velocity.z = move_toward(velocity.z, 0, 0.35)
+			velocity.x = move_toward(velocity.x, 0, 0.25)
+			velocity.z = move_toward(velocity.z, 0, 0.25)
 	
 	#headbob
-	t_bob += delta * velocity.length() * float(is_on_floor())
-	cam.transform.origin = headbob(t_bob)
+	if is_sliding == false:
+		t_bob += delta * velocity.length() * float(is_on_floor())
+		cam.transform.origin = headbob(t_bob)
 	
 	#weapon handling
 	if WEAPON > 3:
@@ -284,24 +299,31 @@ func shoot_doublebarrel():
 			var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
 			var newvelocity = lerp(velocity, gun_direction * 13, 1)
 			velocity += newvelocity
-			#if true:
-				#instanceBullet_s = bulletStandard.instantiate()
-				#instanceBullet_s.position = dbBarrel_u.global_position
-				#instanceBullet_s.transform.basis = dbBarrel_u.global_transform.basis
-				#get_parent().add_child(instanceBullet_s)
-#
-			#if true:
-				#instanceBullet_s = bulletStandard.instantiate()
-				#instanceBullet_s.position = dbBarrel_l.global_position
-				#instanceBullet_s.transform.basis = dbBarrel_l.global_transform.basis
-				#get_parent().add_child(instanceBullet_s)
-			
+			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc2, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc2/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc3, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc3/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc4, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc4/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc5, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc5/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc6, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc6/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc7, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc7/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc8, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc8/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc9, dbBarrel_u, $CameraRoot/Camera3D/hitscan_06/shotgun_spread/rc9/Node3D, shotgun_damage, false)
+		
+			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc2, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc2/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc3, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc3/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc4, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc4/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc5, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc5/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc6, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc6/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc7, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc7/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc8, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc8/Node3D, shotgun_damage, false)
+			hitscan($CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc9, dbBarrel_l, $CameraRoot/Camera3D/hitscan_07/shotgun_spread/rc9/Node3D, shotgun_damage, false)
 		else:
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard(0.15)
-				cross_c.get_collider().get_hit(2.0)
-			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 2.0, true)
-			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 2.0, true)
+				cross_c.get_collider().get_hit(1.0)
+			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.5, true)
+			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.5, true)
 		
 func dbshotgun_switch():
 	if !doublebarrelAnim.is_playing():
@@ -319,15 +341,15 @@ func shoot_revshotgun():
 			if shotAMMO == 0:
 				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true)
 			else:
-				hitscan(raycast_r, rsBarrel, raycastEnd_r, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8/Node3D, 0.5, false)
-				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9/Node3D, 0.5, false)
+				hitscan(raycast_r, rsBarrel, raycastEnd_r, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc2/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc3/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc4/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc5/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc6/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc7/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc8/Node3D, shotgun_damage, false)
+				hitscan($CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9, rsBarrel, $CameraRoot/Camera3D/hitscan_01/shotgun_spread/rc9/Node3D, shotgun_damage, false)
 	else:
 		pass
 
@@ -368,12 +390,27 @@ func reset_rotation_counter():
 
 func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
 	instanceRaycast = bulletTrail.instantiate()
+	var bullet_hole = bullet_decal.instantiate()
 	if raycast.is_colliding():
 		if draw_tracer == true:
 			instanceRaycast.init(barrel.global_position, raycast.get_collision_point())
 		if raycast.get_collider().is_in_group("enemies"):
 			raycast.get_collider().get_hit(damage)
-		#add a way to make bulletholes on surfaces
+		if !raycast.get_collider().is_in_group("enemies"):
+			instanceRaycast.trigger_particle(raycast.get_collision_point(), barrel.global_position)
+			bullet_hole.position = raycast.get_collision_point()
+			bullet_hole.look_at(bullet_hole.global_transform.origin + raycast.get_collision_normal(), Vector3.UP)
+			#if raycast.get_collision_normal() != Vector3.UP and raycast.get_collision_normal() != Vector3.DOWN:
+				#bullet_hole.rotate_object_local(raycast.get_collision_normal(), -90)
 	elif draw_tracer == true:
 		instanceRaycast.init(barrel.global_position, raycast_end.global_position)
 	get_parent().add_child(instanceRaycast)
+	get_parent().add_child(bullet_hole)
+
+func initiate_slide(direction):
+	if direction != Vector3(0,0,0):
+		is_sliding = true
+		var new_velocity = direction * (17.0 * SPEED_BOOST)
+		velocity.x += new_velocity.x
+		velocity.z += new_velocity.z
+		STAMINA -= 20.0
