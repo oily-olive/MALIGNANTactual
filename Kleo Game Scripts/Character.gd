@@ -3,7 +3,7 @@ extends CharacterBody3D
 var SPEED_BOOST = 1.0
 @export var NORMAL_SPEED = 6.5
 var SPRINT_SPEED = 50.0/13.0
-@export var JUMP_VELOCITY = 6.5
+@export var JUMP_VELOCITY = 130.0
 @export var WALL_JUMP_VELOCITY = 12.0
 @export var WALL_JUMP_COUNTER = 4
 var STAMINA = 100.0
@@ -30,6 +30,9 @@ var topSpeedChecker = false
 var amount_rotated = 0.0
 var shotgun_damage
 var is_sliding = false
+var is_slamming = false
+var slam_hit = false
+var jump_add = 0.0
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -102,10 +105,13 @@ func _ready():
 
 func _physics_process(delta):
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
-
+	
+	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 		is_sliding = false
+		if Input.is_action_just_pressed("slide"):
+			ground_slam()
 		if raycast_melee.is_colliding() and Input.is_action_just_pressed("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
 			velocity = velocity.bounce(raycast_melee.get_collision_normal())
 			if velocity.y <= JUMP_VELOCITY/2.0:
@@ -119,11 +125,12 @@ func _physics_process(delta):
 		if amount_rotated != 0.0:
 			reset_rotation_counter()
 		WALL_JUMP_COUNTER = 4
+		is_slamming = false
 		if Input.is_action_pressed("jump"):
 			if is_sliding == false:
-				velocity.y = JUMP_VELOCITY
-			elif is_sliding == true and STAMINA >= 50.0:
-				velocity.y = JUMP_VELOCITY
+				velocity.y = 13.0 + jump_add
+			if is_sliding == true and STAMINA >= 50.0:
+				velocity.y = 6.5
 				STAMINA -= 50.0
 			
 
@@ -139,7 +146,7 @@ func _physics_process(delta):
 		STAMINA = MAX_STAMINA
 	if STAMINA_REGEN_COOLDOWN < STAMINA_REGEN_COOLDOWN_MAX && not Input.is_action_pressed("sprint"):
 		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN + 0.025
-	if Input.is_action_pressed("sprint") or not is_on_floor() or is_sliding == true:
+	if Input.is_action_pressed("sprint") or not is_on_floor() or is_sliding == true or is_slamming == true:
 		STAMINA_REGEN_COOLDOWN = 0
 	if STAMINA_REGEN_COOLDOWN > STAMINA_REGEN_COOLDOWN_MAX:
 		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
@@ -157,7 +164,7 @@ func _physics_process(delta):
 	if is_sliding == true and velocityClamped <= MOVE_SPEED:
 		is_sliding = false
 	var input_dir = Input.get_vector("moveLeft", "moveRight", "moveForward", "moveBack")
-	if is_sliding == false:
+	if is_sliding == false and is_slamming == false:
 		var direction = (neck.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 		if is_sliding == false and is_on_floor() and Input.is_action_just_pressed("slide") and STAMINA >= 20.0:
 			initiate_slide(direction)
@@ -275,6 +282,17 @@ func _physics_process(delta):
 	cl.text = "COMBO x" + str(COMBO)
 	
 	stylebonus_speed()
+	
+	if is_slamming == false:
+		$Area3D/CollisionShape3D.set_disabled(true)
+	if is_slamming == true:
+		$Area3D/CollisionShape3D.set_disabled(false)
+	
+	if $slam_check.is_colliding():
+		reset_jump()
+		if $slam_check.get_collider().is_in_group("enemies") and slam_hit == true:
+			$slam_check.get_collider().get_hit(1.5)
+		slam_hit = false
 
 func headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -356,6 +374,10 @@ func stylebonus_360():
 	STYLE += 250
 	COMBO += 1
 	style_timeout()
+func stylebonus_splat():
+	STYLE += 100
+	COMBO += 1
+	style_timeout()
 
 func get_hit_p(damage):
 	HP -= damage
@@ -375,7 +397,8 @@ func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
 		if !raycast.get_collider().is_in_group("enemies"):
 			instanceRaycast.trigger_particle(raycast.get_collision_point(), barrel.global_position)
 			bullet_hole.position = raycast.get_collision_point()
-			bullet_hole.set_rotation_degrees(raycast.get_collision_normal() * 180)
+			if raycast.get_collision_normal() != Vector3.UP and raycast.get_collision_normal() != Vector3.DOWN:
+				bullet_hole.set_rotation_degrees(raycast.get_collision_normal() * 180)
 	elif draw_tracer == true:
 		instanceRaycast.init(barrel.global_position, raycast_end.global_position)
 	get_parent().add_child(instanceRaycast)
@@ -416,3 +439,22 @@ func shotgun_spread(raycast, barrel, raycast_end, damage, draw_tracer):
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(0,0,0))
 	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+
+
+func _on_area_3d_body_entered(body):
+	if body.is_in_group("enemies") and is_slamming == true:
+		body.get_launched_by_slam()
+
+func ground_slam():
+	if STAMINA >= 20.0:
+		is_slamming = true
+		slam_hit = true
+		velocity.y -= 20.0
+		jump_add = abs(velocity.y)/4
+		velocity.x = 0.0
+		velocity.z = 0.0
+		STAMINA -= 20.0
+
+func reset_jump():
+	await get_tree().create_timer(01).timeout
+	jump_add = 0.0

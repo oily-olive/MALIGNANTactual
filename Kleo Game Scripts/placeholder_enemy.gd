@@ -3,7 +3,9 @@ extends CharacterBody3D
 @onready var nav_agent = $NavigationAgent3D
 @onready var look_anchor = $Node3D
 @onready var hit_anchor = $Node3D2
+@onready var collision_detect = $RayCast3D
 @onready var slef = $"."
+@onready var world = self.get_parent()
 @export var SPEED = 10.0
 const MAX_HEALTH = 1.0
 var HEALTH
@@ -13,14 +15,23 @@ var hit = load("res://Kleo Game Scenes/hit_detect.tscn")
 var hit_l
 var is_dead = false
 
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
 func _ready():
 	HEALTH = MAX_HEALTH
+	
 
 func _physics_process(delta):
 	if is_dead == true:
 		pass
 	else:
 		death_check()
+		
+		if not is_on_floor():
+			var velocityInt = abs(velocity.x) + abs(velocity.y) + abs(velocity.z)
+			if collision_detect.is_colliding() and velocityInt >= 40.0:
+				splatter(velocityInt/30)
+			velocity.y -= gravity * delta
 		var current_location = global_transform.origin
 		var next_location = nav_agent.get_next_path_position()
 		var new_velocity = (next_location - current_location).normalized() * SPEED
@@ -42,6 +53,8 @@ func _physics_process(delta):
 			attack_cooldown += 0.1
 		if is_stunned == true:
 			pass
+		
+		collision_detect.set_target_position(velocity.normalized() * 2)
 
 func update_target_location(target_location):
 	nav_agent.target_position = target_location
@@ -91,3 +104,10 @@ func die():
 	is_dead = true
 	await get_tree().create_timer(5).timeout
 	queue_free()
+
+func get_launched_by_slam():
+	velocity.y += 20.0
+
+func splatter(damage):
+	get_hit(damage)
+	world.splat()
