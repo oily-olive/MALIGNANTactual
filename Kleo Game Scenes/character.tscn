@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=17 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
@@ -22,7 +22,12 @@ size = Vector3(2, 2, 2)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 material = ExtResource("7_0rsev")
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_66dhv"]
+height = 0.25
+radius = 2.5
+
 [node name="Character" type="CharacterBody3D" groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_igum2")
 metadata/_edit_horizontal_guides_ = [300.0, -300.0]
 metadata/_edit_vertical_guides_ = [568.0, -568.0]
@@ -62,6 +67,7 @@ hit_from_inside = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
 
 [node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
+visible = false
 mesh = SubResource("BoxMesh_t1j6g")
 
 [node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
@@ -202,7 +208,6 @@ label_settings = ExtResource("6_6cijo")
 shape = SubResource("CapsuleShape3D_1812g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
 mesh = SubResource("CapsuleMesh_v3ad5")
 
 [node name="walk_sound" type="AudioStreamPlayer3D" parent="."]
@@ -214,3 +219,15 @@ stream = ExtResource("8_5ooss")
 
 [node name="hitstop_sound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_l448n")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.875, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_66dhv")
+
+[node name="slam_check" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, -0.5, 0)
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
