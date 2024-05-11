@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://dfmmsocsfexow"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/projectile.gd" id="1_k1cbj"]
+[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="2_gd13s"]
+[ext_resource type="Script" path="res://Kleo Game Scripts/projectile_parry.gd" id="3_b6e4d"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_cwxfo"]
+radius = 0.25
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_uivoc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v85y3"]
+render_priority = 0
+shader = ExtResource("2_gd13s")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(1, 1, 0, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(1, 1)
+shader_parameter/albedo = SubResource("PlaceholderTexture2D_uivoc")
+
+[sub_resource type="SphereMesh" id="SphereMesh_lm5jr"]
+material = SubResource("ShaderMaterial_v85y3")
+radius = 0.25
+height = 0.5
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_fwnqu"]
+radius = 0.275
+
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["projectiles"]]
+motion_mode = 1
+script = ExtResource("1_k1cbj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_cwxfo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_lm5jr")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="." groups=["projectiles"]]
+script = ExtResource("3_b6e4d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_fwnqu")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

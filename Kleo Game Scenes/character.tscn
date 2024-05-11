@@ -51,7 +51,6 @@ transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.374, -0.377, -0.54
 visible = false
 
 [node name="hitscan_01" type="RayCast3D" parent="CameraRoot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 target_position = Vector3(0, 0, -100)
 collide_with_areas = true
 debug_shape_custom_color = Color(0.670588, 0, 0, 1)
@@ -71,7 +70,7 @@ visible = false
 mesh = SubResource("BoxMesh_t1j6g")
 
 [node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 target_position = Vector3(0, -0.5, -100)
 collide_with_areas = true
 debug_shape_custom_color = Color(0, 1, 0, 1)
@@ -83,7 +82,7 @@ transform = Transform3D(1, 0, 0, 0, 0.999986, 0.00523596, 0, -0.00523596, 0.9999
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, -100)
 
 [node name="hitscan_07" type="RayCast3D" parent="CameraRoot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 target_position = Vector3(0, 0.5, -100)
 collide_with_areas = true
 debug_shape_custom_color = Color(0, 0, 1, 1)
@@ -95,9 +94,11 @@ transform = Transform3D(1, 0, 0, 0, 0.999986, -0.00523596, 0, 0.00523596, 0.9999
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -100)
 
 [node name="hitscan_08" type="RayCast3D" parent="CameraRoot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 target_position = Vector3(0, 0, -1.25)
 collide_with_areas = true
+
+[node name="cam_direction" type="Node3D" parent="CameraRoot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
 [node name="CameraRoot2D" type="Node2D" parent="."]
 
@@ -111,6 +112,11 @@ offset_right = -492.0
 offset_bottom = 300.0
 grow_vertical = 0
 alignment = 1
+
+[node name="ConcentrationLabel" type="Label" parent="CameraRoot2D/ui_container_bottomleft"]
+layout_mode = 2
+text = "CONCENTRATION: "
+label_settings = ExtResource("6_6cijo")
 
 [node name="HPLabel" type="Label" parent="CameraRoot2D/ui_container_bottomleft"]
 unique_name_in_owner = true
@@ -160,6 +166,7 @@ grow_vertical = 0
 
 [node name="SpeedLabel" type="Label" parent="CameraRoot2D/ui_container_bottomright"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "SPEED: "
 label_settings = ExtResource("6_6cijo")

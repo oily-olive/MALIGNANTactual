@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bi15hhlna83u3"]
+[gd_scene load_steps=32 format=3 uid="uid://bi15hhlna83u3"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/testworld.gd" id="1_enjh1"]
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="1_hd2yr"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://c0184thle35lc" path="res://sound/music/Cascada_de_coagulacion.ogg" id="6_2wcpc"]
 [ext_resource type="PackedScene" uid="uid://kigi77jdldbv" path="res://Kleo Game Scenes/placeholder_enemy.tscn" id="7_1eab7"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_skaob"]
+[ext_resource type="PackedScene" uid="uid://d2lick5p12qol" path="res://Kleo Game Scenes/stationary_lobber_enemy.tscn" id="8_1awnq"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
 sky_top_color = Color(0.0352941, 0.290196, 0.333333, 1)
@@ -317,5 +318,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8931, 0, -31.6326)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="out_of_bounds"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 0)
 shape = SubResource("BoxShape3D_nhq3t")
+
+[node name="enemy7" parent="." instance=ExtResource("8_1awnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.1129, 3.30349, -46.8443)
 
 [connection signal="body_entered" from="out_of_bounds" to="." method="_on_out_of_bounds_body_entered"]

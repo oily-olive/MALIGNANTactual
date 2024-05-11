@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://d2lick5p12qol"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/stationary_lobber_enemy.gd" id="1_fg3fa"]
+[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="2_fgxsn"]
+[ext_resource type="Material" uid="uid://fr3sd0cgfj6s" path="res://Olive Game Material Overrides/placeholder3.tres" id="2_mhm03"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_16bse"]
+height = 1.0
+radius = 0.295144
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0rjv8"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ro8ne"]
+material = ExtResource("2_fgxsn")
+top_radius = 0.295
+bottom_radius = 0.295
+height = 1.0
+radial_segments = 8
+rings = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_n8whx"]
+material = ExtResource("2_mhm03")
+radial_segments = 8
+rings = 4
+
+[node name="enemy" type="CharacterBody3D" groups=["enemies"]]
+motion_mode = 1
+script = ExtResource("1_fg3fa")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 1.5
+path_height_offset = 0.5
+avoidance_enabled = true
+neighbor_distance = 1.0
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_16bse")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("SphereShape3D_0rjv8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_ro8ne")
+
+[node name="Node3D3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+
+[node name="Node3D2" type="Node3D" parent="Node3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D3"]
+mesh = SubResource("SphereMesh_n8whx")
+skeleton = NodePath("../..")
+
+[connection signal="target_reached" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_target_reached"]
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]
