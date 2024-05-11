@@ -33,6 +33,8 @@ var is_sliding = false
 var is_slamming = false
 var slam_hit = false
 var jump_add = 0.0
+var melee_charge = 0.0
+var melee_is_charged = false
 @onready var neck := $CameraRoot
 @onready var cam := $CameraRoot/Camera3D
 @onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
@@ -51,6 +53,7 @@ var jump_add = 0.0
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
 @onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
+@onready var cam_d := $CameraRoot/Camera3D/cam_direction
 
 # bullet variables
 var bulletStandard := load("res://Kleo Game Scenes/shotgun_spread.tscn")
@@ -106,13 +109,12 @@ func _ready():
 func _physics_process(delta):
 	var velocityClamped = clamp(velocity.length(), 0.0, SPRINT_SPEED * MOVE_SPEED * 100000)
 	
-	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 		is_sliding = false
 		if Input.is_action_just_pressed("slide"):
 			ground_slam()
-		if raycast_melee.is_colliding() and Input.is_action_just_pressed("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
+		if raycast_melee.is_colliding() and Input.is_action_just_released("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
 			velocity = velocity.bounce(raycast_melee.get_collision_normal())
 			if velocity.y <= JUMP_VELOCITY/2.0:
 				velocity.y += JUMP_VELOCITY/2.0
@@ -122,16 +124,20 @@ func _physics_process(delta):
 	$CameraRoot2D/ui_container_bottomleft/HPLabel.text = "HP: " + str(int(HP))
 
 	if is_on_floor():
+		reset_jump()
 		if amount_rotated != 0.0:
 			reset_rotation_counter()
 		WALL_JUMP_COUNTER = 4
 		is_slamming = false
-		if Input.is_action_pressed("jump"):
+		if Input.is_action_just_pressed("jump"):
 			if is_sliding == false:
-				velocity.y = 13.0 + jump_add
+				velocity.y += 6.5 + jump_add
 			if is_sliding == true and STAMINA >= 50.0:
 				velocity.y = 6.5
 				STAMINA -= 50.0
+		if Input.is_action_pressed("jump"):
+			if is_sliding == false:
+				velocity.y += 6.5
 			
 
 	if is_sliding == true:
@@ -242,9 +248,39 @@ func _physics_process(delta):
 			if shotAMMO != 5:
 				reload_revshotgun()
 	
-	if Input.is_action_just_pressed("tertiaryFire"):
+	if Input.is_action_pressed("tertiaryFire"):
 		#hitstop_standard()
 		pass
+	
+	if Input.is_action_pressed("melee"):
+		melee_charge += 0.05
+		if melee_charge > 1.0 and melee_is_charged == false:
+			HP -= 25.0
+			melee_is_charged = true
+	
+	if Input.is_action_just_released("melee"):
+		if melee_is_charged == false:
+			if raycast_melee.is_colliding():
+				if raycast_melee.get_collider().is_in_group("enemies"):
+					raycast_melee.get_collider().get_hit(0.25)
+				if raycast_melee.get_collider().is_in_group("projectiles"):
+					raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 20, false)
+					hitstop_standard(0.25)
+					stylebonus_parry()
+		else:
+			if raycast_melee.is_colliding():
+				if raycast_melee.get_collider().is_in_group("enemies"):
+					raycast_melee.get_collider().get_hit(1.0)
+					var direction = (cam.global_position - cam_d.global_position).normalized() * -1
+					raycast_melee.get_collider().get_launched_by_punch(direction)
+					HP += 25.0
+				if raycast_melee.get_collider().is_in_group("projectiles"):
+					raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 30, true)
+					hitstop_standard(0.35)
+					HP += 25.0
+					stylebonus_parry()
+			melee_is_charged = false
+		melee_charge = 0.0
 	
 	#FOV
 	
@@ -259,6 +295,7 @@ func _physics_process(delta):
 		CONCENTRATION = MAX_CONCENTRATION
 	if CONCENTRATION < 0.0:
 		CONCENTRATION = 0.0
+	$CameraRoot2D/ui_container_bottomleft/ConcentrationLabel.text = str(int(CONCENTRATION))
 	
 	#style
 	if STYLE_TIMEOUT < 0:
@@ -269,9 +306,12 @@ func _physics_process(delta):
 	
 	if STYLE_TIMEOUT == 0:
 		SCORE = SCORE + int(STYLE * COMBO)
-		CONCENTRATION = CONCENTRATION + (STYLE / 10.0)
+		CONCENTRATION += (STYLE / 10.0)
 		STYLE = 0
 		COMBO = 0
+	
+	if Input.is_action_just_pressed("heal") and CONCENTRATION >= 50:
+		heal()
 	
 	$CameraRoot2D/ui_container_topright/StyleLabel.text = "STYLE: " + str(int(STYLE))
 	$CameraRoot2D/ui_container_topleft/ScoreLabel.text = str(SCORE)
@@ -288,12 +328,6 @@ func _physics_process(delta):
 	if is_slamming == true:
 		$Area3D/CollisionShape3D.set_disabled(false)
 	
-	if $slam_check.is_colliding():
-		reset_jump()
-		if $slam_check.get_collider().is_in_group("enemies") and slam_hit == true:
-			$slam_check.get_collider().get_hit(1.5)
-		slam_hit = false
-
 func headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
 	pos.y = sin(time * BOB_FREQUENCY) * BOB_AMPLITUDE
@@ -303,7 +337,7 @@ func headbob(time) -> Vector3:
 func shoot_revolver():
 	if !revolverAnim.is_playing():
 		revolverAnim.play("recoil")
-		hitscan(raycast_r, revolverBarrel, raycastEnd_r, 1.0, true)
+		hitscan(raycast_r, revolverBarrel, raycastEnd_r, 1.0, true, false)
 		
 		
 #behold, the folly of man.
@@ -324,8 +358,8 @@ func shoot_doublebarrel():
 			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
 				hitstop_standard(0.15)
 				cross_c.get_collider().get_hit(1.0)
-			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.5, true)
-			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.5, true)
+			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.5, true, true)
+			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.5, true, true)
 		
 func dbshotgun_switch():
 	if !doublebarrelAnim.is_playing():
@@ -341,7 +375,7 @@ func shoot_revshotgun():
 			shottyAnim.play("recoil")
 			shotAMMO = shotAMMO - 1
 			if shotAMMO == 0:
-				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true)
+				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true, true)
 			else:
 				shotgun_spread(raycast_r, rsBarrel, raycastEnd_r, 0.25, false)
 	else:
@@ -355,6 +389,8 @@ func reload_revshotgun():
 			SPEED_BOOST = 1.5
 		shotAMMO = 5
 		
+
+#style
 func style_timeout():
 	STYLE_TIMEOUT = STYLE_TIMEOUT + (20.0 / (COMBO))
 func stylebonus_speed():
@@ -378,6 +414,10 @@ func stylebonus_splat():
 	STYLE += 100
 	COMBO += 1
 	style_timeout()
+func stylebonus_parry():
+	STYLE += 250
+	COMBO += 1
+	style_timeout()
 
 func get_hit_p(damage):
 	HP -= damage
@@ -386,7 +426,7 @@ func reset_rotation_counter():
 	await get_tree().create_timer(0.25).timeout
 	amount_rotated = 0.0
 
-func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
+func hitscan(raycast, barrel, raycast_end, damage, draw_tracer, destroy_projectiles):
 	instanceRaycast = bulletTrail.instantiate()
 	var bullet_hole = bullet_decal.instantiate()
 	if raycast.is_colliding():
@@ -394,7 +434,9 @@ func hitscan(raycast, barrel, raycast_end, damage, draw_tracer):
 			instanceRaycast.init(barrel.global_position, raycast.get_collision_point())
 		if raycast.get_collider().is_in_group("enemies"):
 			raycast.get_collider().get_hit(damage)
-		if !raycast.get_collider().is_in_group("enemies"):
+		if raycast.get_collider().is_in_group("projectiles") and destroy_projectiles:
+			raycast.get_collider().explode()
+		if !raycast.get_collider().is_in_group("enemies") and !raycast.get_collider().is_in_group("projectiles"):
 			instanceRaycast.trigger_particle(raycast.get_collision_point(), barrel.global_position)
 			bullet_hole.position = raycast.get_collision_point()
 			if raycast.get_collision_normal() != Vector3.UP and raycast.get_collision_normal() != Vector3.DOWN:
@@ -414,31 +456,31 @@ func initiate_slide(direction):
 
 func shotgun_spread(raycast, barrel, raycast_end, damage, draw_tracer):
 	raycast.set_rotation_degrees(Vector3(3,0,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(-3,0,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(0,3,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(0,-3,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(2,2,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(2,-2,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(-2,2,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(-2,-2,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 	await get_tree().create_timer(0.01).timeout
 	raycast.set_rotation_degrees(Vector3(0,0,0))
-	hitscan(raycast, barrel, raycast_end, damage, draw_tracer)
+	hitscan(raycast, barrel, raycast_end, damage, draw_tracer, false)
 
 
 func _on_area_3d_body_entered(body):
@@ -458,3 +500,9 @@ func ground_slam():
 func reset_jump():
 	await get_tree().create_timer(01).timeout
 	jump_add = 0.0
+
+func heal():
+	await get_tree().create_timer(1).timeout
+	if Input.is_action_pressed("heal") and CONCENTRATION >= 50:
+		HP += 25.0
+		CONCENTRATION -= 50.0

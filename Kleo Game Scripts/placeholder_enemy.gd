@@ -4,7 +4,6 @@ extends CharacterBody3D
 @onready var look_anchor = $Node3D
 @onready var hit_anchor = $Node3D2
 @onready var collision_detect = $RayCast3D
-@onready var slef = $"."
 @onready var world = self.get_parent()
 @export var SPEED = 10.0
 const MAX_HEALTH = 1.0
@@ -14,6 +13,7 @@ var is_stunned = false
 var hit = load("res://Kleo Game Scenes/hit_detect.tscn")
 var hit_l
 var is_dead = false
+var splatted = false
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -29,7 +29,7 @@ func _physics_process(delta):
 		
 		if not is_on_floor():
 			var velocityInt = abs(velocity.x) + abs(velocity.y) + abs(velocity.z)
-			if collision_detect.is_colliding() and velocityInt >= 40.0:
+			if collision_detect.is_colliding() and velocityInt >= 40.0 and splatted == false:
 				splatter(velocityInt/30)
 			velocity.y -= gravity * delta
 		var current_location = global_transform.origin
@@ -75,11 +75,9 @@ func get_hit(damage):
 
 func death_check():
 	if HEALTH <= 0.0:
-		slef.visible = false
 		die()
 	if HEALTH <= 0.0 - MAX_HEALTH:
 		print("gibbed")
-		slef.visible = false
 		die()
 	else:
 		pass
@@ -101,6 +99,7 @@ func _on_navigation_agent_3d_target_reached():
 		
 func die():
 	$CollisionShape3D.set_disabled(true)
+	self.visible = false
 	is_dead = true
 	await get_tree().create_timer(5).timeout
 	queue_free()
@@ -109,5 +108,12 @@ func get_launched_by_slam():
 	velocity.y += 20.0
 
 func splatter(damage):
+	splatted = true
 	get_hit(damage)
 	world.splat()
+	
+func get_launched_by_punch(direction):
+	if not is_on_floor():
+		velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40)
+	else:
+		velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40) / 4
