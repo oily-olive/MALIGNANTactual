@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://cgwjahs1skpom"]
+
+[ext_resource type="PackedScene" uid="uid://baosaty7j6vpr" path="res://addons/SimpleDungeons/DungeonGenerator.tscn" id="1_2h43x"]
+[ext_resource type="Script" path="res://Kleo Game Scripts/test_dungeon.gd" id="1_fvn68"]
+[ext_resource type="PackedScene" uid="uid://njharl1220yq" path="res://Kleo Game Scenes/dun_kits/test_kit.tscn" id="2_mg7cf"]
+[ext_resource type="Environment" uid="uid://ct1wbiin0lxlg" path="res://environments/testworld.tres" id="3_tg5o7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g4r4s"]
+size = Vector3(1000, 1, 1000)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_fvn68")
+
+[node name="DungeonGenerator" parent="." instance=ExtResource("1_2h43x")]
+dungeon_kit_scene = ExtResource("2_mg7cf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_tg5o7")
+
+[node name="out_of_bounds" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -25, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="out_of_bounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 0)
+shape = SubResource("BoxShape3D_g4r4s")
+
+[connection signal="body_entered" from="out_of_bounds" to="." method="_on_out_of_bounds_body_entered"]
