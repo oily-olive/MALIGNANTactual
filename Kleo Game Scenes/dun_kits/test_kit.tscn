@@ -1,0 +1,205 @@
+[gd_scene load_steps=21 format=3 uid="uid://njharl1220yq"]
+
+[ext_resource type="Script" path="res://addons/SimpleDungeons/DungeonKit.gd" id="1_cnjwv"]
+[ext_resource type="Environment" uid="uid://ct1wbiin0lxlg" path="res://environments/testworld.tres" id="2_5b180"]
+[ext_resource type="Script" path="res://addons/SimpleDungeons/DungeonRoom.gd" id="3_fjpfa"]
+[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="4_7jr7o"]
+[ext_resource type="Texture2D" uid="uid://brjdh76emypuk" path="res://Kleo Game Models/textures/texture_08.png" id="5_5ts86"]
+[ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="6_ywmvj"]
+[ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_xw00c"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_80dge"]
+material = ExtResource("7_xw00c")
+flip_faces = true
+size = Vector3(10, 10, 10)
+subdivide_width = 5
+subdivide_height = 5
+subdivide_depth = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rdy5d"]
+render_priority = 0
+shader = ExtResource("4_7jr7o")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(0.175, 0.25)
+shader_parameter/albedo = ExtResource("5_5ts86")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r5ja7"]
+size = Vector2(10, 10)
+orientation = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_q23em"]
+size = Vector3(10, 10, 10)
+subdivide_width = 5
+subdivide_height = 5
+subdivide_depth = 5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_y6dic"]
+flip_faces = true
+size = Vector2(10, 10)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_u1qgp"]
+size = Vector2(10, 10)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_v12g2"]
+flip_faces = true
+size = Vector2(10, 10)
+orientation = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_enltp"]
+size = Vector2(10, 10)
+orientation = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_xc3ep"]
+flip_faces = true
+size = Vector3(10, 20, 20)
+subdivide_width = 5
+subdivide_height = 10
+subdivide_depth = 10
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_135ns"]
+render_priority = 0
+shader = ExtResource("4_7jr7o")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(0.087, 0.125)
+shader_parameter/albedo = ExtResource("5_5ts86")
+
+[sub_resource type="PrismMesh" id="PrismMesh_bymcd"]
+left_to_right = 0.0
+size = Vector3(10, 10, 10)
+subdivide_width = 5
+subdivide_height = 5
+subdivide_depth = 5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gsd0q"]
+size = Vector2(10, 10)
+orientation = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a7upe"]
+flip_faces = true
+size = Vector2(10, 10)
+orientation = 2
+
+[node name="test_kit" type="Node3D"]
+script = ExtResource("1_cnjwv")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_5b180")
+
+[node name="EntranceRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+script = ExtResource("3_fjpfa")
+min_count = 1
+max_count = 1
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="EntranceRoom"]
+use_collision = true
+mesh = SubResource("BoxMesh_80dge")
+material = SubResource("ShaderMaterial_rdy5d")
+
+[node name="DOOR" type="CSGMesh3D" parent="EntranceRoom/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+operation = 2
+mesh = SubResource("PlaneMesh_r5ja7")
+
+[node name="Character" parent="EntranceRoom" instance=ExtResource("6_ywmvj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.64821, 0)
+
+[node name="AABB" type="CSGBox3D" parent="EntranceRoom"]
+visible = false
+size = Vector3(10, 10, 10)
+
+[node name="AnyRoom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -20)
+script = ExtResource("3_fjpfa")
+
+[node name="floor" type="CSGMesh3D" parent="AnyRoom"]
+use_collision = true
+flip_faces = true
+mesh = SubResource("BoxMesh_q23em")
+material = ExtResource("7_xw00c")
+
+[node name="DOOR?neg_z" type="CSGMesh3D" parent="AnyRoom/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+operation = 2
+mesh = SubResource("PlaneMesh_y6dic")
+
+[node name="DOOR?pos_z" type="CSGMesh3D" parent="AnyRoom/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+operation = 2
+mesh = SubResource("PlaneMesh_u1qgp")
+
+[node name="DOOR?neg_x" type="CSGMesh3D" parent="AnyRoom/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+operation = 2
+mesh = SubResource("PlaneMesh_v12g2")
+
+[node name="DOOR?pos_x" type="CSGMesh3D" parent="AnyRoom/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+operation = 2
+mesh = SubResource("PlaneMesh_enltp")
+
+[node name="AABB" type="CSGBox3D" parent="AnyRoom"]
+visible = false
+size = Vector3(10, 10, 10)
+
+[node name="Stair" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 20)
+script = ExtResource("3_fjpfa")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Stair"]
+use_collision = true
+mesh = SubResource("BoxMesh_xc3ep")
+material = SubResource("ShaderMaterial_135ns")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Stair/CSGMesh3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -5, 5)
+mesh = SubResource("PrismMesh_bymcd")
+material = ExtResource("7_xw00c")
+
+[node name="DOORlower" type="CSGMesh3D" parent="Stair/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -5, -5)
+operation = 2
+mesh = SubResource("PlaneMesh_gsd0q")
+
+[node name="DOORupper" type="CSGMesh3D" parent="Stair/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 10)
+operation = 2
+mesh = SubResource("PlaneMesh_a7upe")
+
+[node name="AABB" type="CSGBox3D" parent="Stair"]
+visible = false
+size = Vector3(10, 20, 20)
+
+[node name="exit" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -40)
+script = ExtResource("3_fjpfa")
+min_count = 1
+max_count = 1
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="exit"]
+use_collision = true
+mesh = SubResource("BoxMesh_80dge")
+material = SubResource("ShaderMaterial_rdy5d")
+
+[node name="DOOR" type="CSGMesh3D" parent="exit/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+operation = 2
+mesh = SubResource("PlaneMesh_r5ja7")
+
+[node name="AABB" type="CSGBox3D" parent="exit"]
+visible = false
+size = Vector3(10, 10, 10)
