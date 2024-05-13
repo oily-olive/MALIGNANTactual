@@ -71,7 +71,7 @@ func attack_initiate():
 	if attack_cooldown == 15.0:
 		attack_cooldown = 0.0
 	hit_l = hit.instantiate()
-	hit_l.change_direction(direction, 15, false)
+	hit_l.change_direction(direction, 15, false, true)
 	hit_l.position = $Node3D3/Node3D2.global_position
 	get_parent().add_child(hit_l)
 	

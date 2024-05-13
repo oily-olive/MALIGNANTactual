@@ -264,9 +264,10 @@ func _physics_process(delta):
 				if raycast_melee.get_collider().is_in_group("enemies"):
 					raycast_melee.get_collider().get_hit(0.25)
 				if raycast_melee.get_collider().is_in_group("projectiles"):
-					raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 20, false)
-					hitstop_standard(0.25)
-					stylebonus_parry()
+					if raycast_melee.get_collider().is_parryable:
+						raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 20, false, true)
+						hitstop_standard(0.25)
+						stylebonus_parry()
 		else:
 			if raycast_melee.is_colliding():
 				if raycast_melee.get_collider().is_in_group("enemies"):
@@ -275,10 +276,11 @@ func _physics_process(delta):
 					raycast_melee.get_collider().get_launched_by_punch(direction)
 					HP += 25.0
 				if raycast_melee.get_collider().is_in_group("projectiles"):
-					raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 30, true)
-					hitstop_standard(0.35)
-					HP += 25.0
-					stylebonus_parry()
+					if raycast_melee.get_collider().is_parryable:
+						raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 40, true, true)
+						hitstop_standard(0.35)
+						HP += 25.0
+						stylebonus_parry()
 			melee_is_charged = false
 		melee_charge = 0.0
 	
