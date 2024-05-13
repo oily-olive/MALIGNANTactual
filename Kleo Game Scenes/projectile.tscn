@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfmmsocsfexow"]
+[gd_scene load_steps=10 format=3 uid="uid://dfmmsocsfexow"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/projectile.gd" id="1_k1cbj"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="2_gd13s"]
@@ -9,6 +9,8 @@ radius = 0.25
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_uivoc"]
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_k8kxo"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_v85y3"]
 render_priority = 0
 shader = ExtResource("2_gd13s")
@@ -18,9 +20,10 @@ shader_parameter/jitter_depth_independent = true
 shader_parameter/affine_texture_mapping = true
 shader_parameter/alpha_scissor = 1.0
 shader_parameter/albedo_color = Color(1, 1, 0, 1)
-shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/emission_color = Color(0, 1, 0.478431, 1)
 shader_parameter/texture_size = Vector2(1, 1)
 shader_parameter/albedo = SubResource("PlaceholderTexture2D_uivoc")
+shader_parameter/emission = SubResource("PlaceholderTexture2D_k8kxo")
 
 [sub_resource type="SphereMesh" id="SphereMesh_lm5jr"]
 material = SubResource("ShaderMaterial_v85y3")
@@ -30,7 +33,7 @@ radial_segments = 8
 rings = 4
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fwnqu"]
-radius = 0.275
+radius = 0.25
 
 [node name="CharacterBody3D" type="CharacterBody3D" groups=["projectiles"]]
 motion_mode = 1
