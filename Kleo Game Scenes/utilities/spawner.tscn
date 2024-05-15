@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/spawner.gd" id="1_p7w3s"]
 
-[node name="spawner" type="Node3D"]
+[node name="spawner" type="Node3D" groups=["spawner"]]
 script = ExtResource("1_p7w3s")
