@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://bgoiu53shh7gc" path="res://Olive Game Material Overrides/placeholder_ground.tres" id="3_r5mxc"]
 [ext_resource type="Material" uid="uid://c26lvnncn7f2d" path="res://Olive Game Material Overrides/placeholder_wall.tres" id="4_3lusl"]
 [ext_resource type="AudioStream" uid="uid://c0184thle35lc" path="res://sound/music/Cascada_de_coagulacion.ogg" id="6_2wcpc"]
-[ext_resource type="PackedScene" uid="uid://kigi77jdldbv" path="res://Kleo Game Scenes/placeholder_enemy.tscn" id="7_1eab7"]
+[ext_resource type="PackedScene" uid="uid://coygjw43iv5f3" path="res://Kleo Game Scenes/utilities/spawner.tscn" id="7_bqb5d"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_skaob"]
 [ext_resource type="PackedScene" uid="uid://d2lick5p12qol" path="res://Kleo Game Scenes/stationary_lobber_enemy.tscn" id="8_1awnq"]
 
@@ -131,12 +131,6 @@ transform = Transform3D(0.152866, -0.907714, 0.390752, 0.0332212, 0.399896, 0.91
 light_color = Color(1, 0.768627, 0.772549, 1)
 light_energy = 2.131
 shadow_enabled = true
-
-[node name="Character" parent="." instance=ExtResource("1_hd2yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0326829, 2.14713, 0)
-JUMP_VELOCITY = 10.0
-metadata/_edit_horizontal_guides_ = [300.0]
-metadata/_edit_vertical_guides_ = [568.0]
 
 [node name="music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_2wcpc")
@@ -295,24 +289,6 @@ skeleton = NodePath("../../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/CSGCombiner3D/MeshInstance3D10/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_i43sp")
 
-[node name="enemy" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -31.6326)
-
-[node name="enemy2" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.29516, 0, -31.6326)
-
-[node name="enemy3" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.98796, 0, -31.6326)
-
-[node name="enemy4" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.45354, 0, -31.6326)
-
-[node name="enemy5" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.2199, 0, -31.6326)
-
-[node name="enemy6" parent="." instance=ExtResource("7_1eab7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8931, 0, -31.6326)
-
 [node name="out_of_bounds" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="out_of_bounds"]
@@ -321,5 +297,10 @@ shape = SubResource("BoxShape3D_nhq3t")
 
 [node name="enemy7" parent="." instance=ExtResource("8_1awnq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.1129, 3.30349, -46.8443)
+
+[node name="spawner" parent="." instance=ExtResource("7_bqb5d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.26551, 0)
+thing_to_spawn = ExtResource("1_hd2yr")
+spawns_immediately = true
 
 [connection signal="body_entered" from="out_of_bounds" to="." method="_on_out_of_bounds_body_entered"]
