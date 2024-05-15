@@ -1,13 +1,18 @@
 extends Node3D
 
-@onready var player = $Character
+var player : Node3D
 @onready var oob = $out_of_bounds
 
+func _ready():
+	await get_tree().create_timer(.1).timeout
+	for node in get_children():
+		if node.is_in_group("player"):
+			player = node
+
 func _physics_process(delta):
-	get_tree().call_group("enemies", "update_target_location", player.global_transform.origin)
 	if $music.playing == false: 
 		$music.play()
-	pass
+	update_enemy_nav.call_deferred()
 
 
 func _on_out_of_bounds_body_entered(body):
@@ -17,3 +22,7 @@ func _on_out_of_bounds_body_entered(body):
 
 func splat():
 	player.stylebonus_splat()
+
+func update_enemy_nav():
+	await get_tree().create_timer(0.0001).timeout
+	get_tree().call_group("enemies", "update_target_location", player.global_transform.origin)
