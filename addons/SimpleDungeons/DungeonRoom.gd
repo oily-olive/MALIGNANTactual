@@ -47,6 +47,13 @@ class Door:
 				return other_room
 		return null
 
+func _ready():
+	connect("placed_room", on_placed)
+
+func on_placed():
+	if $CSGMesh3D/player_spawner != null:
+		$CSGMesh3D/player_spawner.spawn()
+
 func make_duplicate() -> DungeonRoom:
 	var dupe = self.duplicate()
 	dupe.dungeon_kit = dungeon_kit
