@@ -6,6 +6,7 @@ func change_direction(direction: Vector3, force: float, exploding: bool, parryab
 
 func explode():
 	get_parent_node_3d().explode()
+	get_parent_node_3d().despawn()
 
 func _process(delta):
 	is_parryable = get_parent_node_3d().is_parryable
