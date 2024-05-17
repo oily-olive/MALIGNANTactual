@@ -9,8 +9,8 @@
 [ext_resource type="Material" uid="uid://dw6webk13k0hj" path="res://Olive Game Material Overrides/psx_filter.tres" id="5_ojw3w"]
 [ext_resource type="LabelSettings" uid="uid://c6i5e62bqc3jv" path="res://label thingies/font1.tres" id="6_6cijo"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_0rsev"]
-[ext_resource type="AudioStream" uid="uid://bfyjw6s0pagqm" path="res://sound/sfx/jump_impact_2.wav" id="8_5ooss"]
-[ext_resource type="AudioStream" uid="uid://whayhxdk8oei" path="res://sound/sfx/jump_impact_short.wav" id="9_mox8n"]
+[ext_resource type="AudioStream" uid="uid://sx888bs81l4" path="res://sound/sfx/jump_impact_2.wav" id="8_5ooss"]
+[ext_resource type="AudioStream" uid="uid://l8hvc2a5jbfk" path="res://sound/sfx/jump_impact_short.wav" id="9_mox8n"]
 [ext_resource type="AudioStream" uid="uid://cg33iw1wpt1mb" path="res://sound/sfx/hitstop.ogg" id="11_l448n"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_t1j6g"]

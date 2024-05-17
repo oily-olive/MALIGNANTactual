@@ -1,30 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://babocgvx6ksry"]
+[gd_scene load_steps=5 format=3 uid="uid://babocgvx6ksry"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/explosion.gd" id="1_aoarf"]
-[ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="2_64bd8"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_gtgn4"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_qtcjt"]
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_h3rvb"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_d73gm"]
-render_priority = 0
-shader = ExtResource("2_64bd8")
-shader_parameter/jitter = 0.5
-shader_parameter/jitter_z_coordinate = true
-shader_parameter/jitter_depth_independent = true
-shader_parameter/affine_texture_mapping = true
-shader_parameter/alpha_scissor = 1.0
-shader_parameter/albedo_color = Color(1, 1, 1, 0)
-shader_parameter/emission_color = Color(1, 1, 0, 0.501961)
-shader_parameter/texture_size = Vector2(1, 1)
-shader_parameter/albedo = SubResource("CanvasTexture_qtcjt")
-shader_parameter/emission = SubResource("CanvasTexture_h3rvb")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16p6n"]
+transparency = 1
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_s31vk"]
-material = SubResource("ShaderMaterial_d73gm")
+material = SubResource("StandardMaterial3D_16p6n")
 radial_segments = 8
 rings = 4
 
