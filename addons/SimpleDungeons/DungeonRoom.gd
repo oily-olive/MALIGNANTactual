@@ -51,8 +51,8 @@ func _ready():
 	connect("placed_room", on_placed)
 
 func on_placed():
-	if $CSGMesh3D/player_spawner != null:
-		$CSGMesh3D/player_spawner.spawn()
+	if $player_spawner != null:
+		$player_spawner.spawn()
 
 func make_duplicate() -> DungeonRoom:
 	var dupe = self.duplicate()
