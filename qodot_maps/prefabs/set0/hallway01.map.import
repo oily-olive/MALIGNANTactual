@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://doidtjgwxkkxi"
+path="res://.godot/imported/hallway01.map-a0486474a779a9efe173280effa84cda.tres"
+
+[deps]
+
+source_file="res://qodot_maps/prefabs/set0/hallway01.map"
+dest_files=["res://.godot/imported/hallway01.map-a0486474a779a9efe173280effa84cda.tres"]
+
+[params]
+

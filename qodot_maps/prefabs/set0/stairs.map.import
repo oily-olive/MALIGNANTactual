@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://cfy0j1praisrr"
+path="res://.godot/imported/stairs.map-8da17d28b5f44d584a071915f7475b08.tres"
+
+[deps]
+
+source_file="res://qodot_maps/prefabs/set0/stairs.map"
+dest_files=["res://.godot/imported/stairs.map-8da17d28b5f44d584a071915f7475b08.tres"]
+
+[params]
+

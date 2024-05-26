@@ -1,0 +1,16 @@
+// Game: MALIGNANT
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "textures"
+// brush 0
+{
+( 0 80 160 ) ( 0 -80 160 ) ( 0 -80 0 ) __TB_empty 0 0 0 1 1
+( 0 -80 160 ) ( 16 -80 160 ) ( 16 -80 0 ) __TB_empty 16 0 0 1 1
+( 16 -80 0 ) ( 16 80 0 ) ( 0 80 0 ) __TB_empty 16 0 0 1 1
+( 0 80 160 ) ( 16 80 160 ) ( 16 -80 160 ) __TB_empty 16 0 0 1 1
+( 16 80 0 ) ( 16 80 160 ) ( 0 80 160 ) __TB_empty 16 0 0 1 1
+( 16 -80 160 ) ( 16 80 160 ) ( 16 80 0 ) __TB_empty 0 0 0 1 1
+}
+}

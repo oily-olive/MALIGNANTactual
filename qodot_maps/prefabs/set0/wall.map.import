@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://b5h30hdu5a266"
+path="res://.godot/imported/wall.map-3776f4476b01be2e09d203a151913b00.tres"
+
+[deps]
+
+source_file="res://qodot_maps/prefabs/set0/wall.map"
+dest_files=["res://.godot/imported/wall.map-3776f4476b01be2e09d203a151913b00.tres"]
+
+[params]
+

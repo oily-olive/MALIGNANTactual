@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://053j8ah25nkr"
+path="res://.godot/imported/generic01.map-3001114ab5f52173e33aa868619dba24.tres"
+
+[deps]
+
+source_file="res://qodot_maps/prefabs/set0/generic01.map"
+dest_files=["res://.godot/imported/generic01.map-3001114ab5f52173e33aa868619dba24.tres"]
+
+[params]
+

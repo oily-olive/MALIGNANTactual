@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://dv51txe6dxjpm"
+path="res://.godot/imported/beginning_end01.map-fa447e145da5965e25addad32f2482bf.tres"
+
+[deps]
+
+source_file="res://qodot_maps/prefabs/set0/beginning_end01.map"
+dest_files=["res://.godot/imported/beginning_end01.map-fa447e145da5965e25addad32f2482bf.tres"]
+
+[params]
+
