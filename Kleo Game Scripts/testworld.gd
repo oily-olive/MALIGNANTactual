@@ -10,19 +10,15 @@ func _ready():
 			player = node
 
 func _physics_process(delta):
-	if $music.playing == false: 
-		$music.play()
-	update_enemy_nav.call_deferred()
+	#if $music.playing == false: 
+		#$music.play()
+	pass
 
 
 func _on_out_of_bounds_body_entered(body):
 	if body.is_in_group("player"):
-		body.set_position(Vector3(0,0,0))
+		body.set_position(Vector3(0,5,0))
 		print("Shit, looks like i forgot to fix that...")
 
 func splat():
 	player.stylebonus_splat()
-
-func update_enemy_nav():
-	await get_tree().create_timer(0.0001).timeout
-	get_tree().call_group("enemies", "update_target_location", player.global_transform.origin)

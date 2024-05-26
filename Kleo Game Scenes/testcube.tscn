@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://ev147n4f6d8w"]
+
+[ext_resource type="PackedScene" uid="uid://2kt1j8fcagyp" path="res://Kleo Game Models/testcube.blend" id="1_p20on"]
+[ext_resource type="Texture2D" uid="uid://bbkd5573648t6" path="res://Kleo Game Models/textures/testcube.png" id="2_sn1hi"]
+[ext_resource type="Shader" path="res://psx.gdshader" id="3_ecdvf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vybp2"]
+albedo_texture = ExtResource("2_sn1hi")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c80ir"]
+render_priority = 0
+shader = ExtResource("3_ecdvf")
+shader_parameter/affine_mapping = true
+shader_parameter/alpha_scissor = 0.5
+shader_parameter/jitter = 0.5
+shader_parameter/resolution = Vector2i(320, 240)
+
+[node name="testcube" instance=ExtResource("1_p20on")]
+
+[node name="Cube" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_vybp2")
+surface_material_override/0 = SubResource("ShaderMaterial_c80ir")

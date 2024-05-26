@@ -1,8 +1,8 @@
 [gd_scene load_steps=13 format=3 uid="uid://p6k6t3mayduc"]
 
 [ext_resource type="PackedScene" uid="uid://b265liu86ep0n" path="res://Kleo Game Models/mushroom_guy.blend" id="1_rcsy6"]
-[ext_resource type="Texture2D" uid="uid://brjdh76emypuk" path="res://Kleo Game Models/textures/texture_08.png" id="2_f1p03"]
-[ext_resource type="Texture2D" uid="uid://hmcdwesajbod" path="res://Kleo Game Models/textures/texture_10.png" id="3_pelji"]
+[ext_resource type="Texture2D" uid="uid://brjdh76emypuk" path="res://textures/texture_08.png" id="2_f1p03"]
+[ext_resource type="Texture2D" uid="uid://hmcdwesajbod" path="res://textures/texture_10.png" id="3_pelji"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jqyda"]
 albedo_texture = ExtResource("2_f1p03")

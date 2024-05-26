@@ -1,37 +1,16 @@
-[gd_scene load_steps=23 format=3 uid="uid://njharl1220yq"]
+[gd_scene load_steps=24 format=3 uid="uid://njharl1220yq"]
 
 [ext_resource type="Script" path="res://addons/SimpleDungeons/DungeonKit.gd" id="1_cnjwv"]
 [ext_resource type="Environment" uid="uid://ct1wbiin0lxlg" path="res://environments/testworld.tres" id="2_5b180"]
 [ext_resource type="Script" path="res://addons/SimpleDungeons/DungeonRoom.gd" id="3_fjpfa"]
 [ext_resource type="Shader" path="res://Olive Game Material Overrides/shaders/godot-psx-master/Shaders/psx_lit.gdshader" id="4_7jr7o"]
-[ext_resource type="Texture2D" uid="uid://brjdh76emypuk" path="res://Kleo Game Models/textures/texture_08.png" id="5_5ts86"]
 [ext_resource type="PackedScene" uid="uid://ddg1hwbx1w5xl" path="res://Kleo Game Scenes/character.tscn" id="6_ywmvj"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_xw00c"]
 [ext_resource type="PackedScene" uid="uid://coygjw43iv5f3" path="res://Kleo Game Scenes/utilities/spawner.tscn" id="8_tf2xe"]
 [ext_resource type="PackedScene" uid="uid://be4xnoputohio" path="res://Kleo Game Scenes/wall.tscn" id="9_ftcvr"]
+[ext_resource type="Texture2D" uid="uid://brjdh76emypuk" path="res://textures/texture_08.png" id="9_vuvtt"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_80dge"]
-material = ExtResource("7_xw00c")
-flip_faces = true
-size = Vector3(10, 10, 10)
-subdivide_width = 5
-subdivide_height = 5
-subdivide_depth = 5
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rdy5d"]
-render_priority = 0
-shader = ExtResource("4_7jr7o")
-shader_parameter/jitter = 0.5
-shader_parameter/jitter_z_coordinate = true
-shader_parameter/jitter_depth_independent = true
-shader_parameter/affine_texture_mapping = true
-shader_parameter/alpha_scissor = 1.0
-shader_parameter/albedo_color = Color(1, 1, 1, 1)
-shader_parameter/emission_color = Color(1, 1, 1, 1)
-shader_parameter/texture_size = Vector2(0.175, 0.25)
-shader_parameter/albedo = ExtResource("5_5ts86")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_r5ja7"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_ywnrs"]
 size = Vector2(10, 10)
 orientation = 2
 
@@ -77,7 +56,7 @@ shader_parameter/alpha_scissor = 1.0
 shader_parameter/albedo_color = Color(1, 1, 1, 1)
 shader_parameter/emission_color = Color(1, 1, 1, 1)
 shader_parameter/texture_size = Vector2(0.087, 0.125)
-shader_parameter/albedo = ExtResource("5_5ts86")
+shader_parameter/albedo = ExtResource("9_vuvtt")
 
 [sub_resource type="PrismMesh" id="PrismMesh_bymcd"]
 left_to_right = 0.0
@@ -95,6 +74,31 @@ flip_faces = true
 size = Vector2(10, 10)
 orientation = 2
 
+[sub_resource type="BoxMesh" id="BoxMesh_80dge"]
+material = ExtResource("7_xw00c")
+flip_faces = true
+size = Vector3(10, 10, 10)
+subdivide_width = 5
+subdivide_height = 5
+subdivide_depth = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rdy5d"]
+render_priority = 0
+shader = ExtResource("4_7jr7o")
+shader_parameter/jitter = 0.5
+shader_parameter/jitter_z_coordinate = true
+shader_parameter/jitter_depth_independent = true
+shader_parameter/affine_texture_mapping = true
+shader_parameter/alpha_scissor = 1.0
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/texture_size = Vector2(0.175, 0.25)
+shader_parameter/albedo = ExtResource("9_vuvtt")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r5ja7"]
+size = Vector2(10, 10)
+orientation = 2
+
 [node name="test_kit" type="Node3D"]
 script = ExtResource("1_cnjwv")
 
@@ -107,27 +111,41 @@ script = ExtResource("3_fjpfa")
 min_count = 1
 max_count = 1
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="EntranceRoom"]
-use_collision = true
-mesh = SubResource("BoxMesh_80dge")
-material = SubResource("ShaderMaterial_rdy5d")
-
-[node name="DOOR" type="CSGMesh3D" parent="EntranceRoom/CSGMesh3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
-operation = 2
-mesh = SubResource("PlaneMesh_r5ja7")
-
-[node name="player_spawner" parent="EntranceRoom/CSGMesh3D" groups=["player_spawner"] instance=ExtResource("8_tf2xe")]
-thing_to_spawn = ExtResource("6_ywmvj")
-add_to_scene = true
-
 [node name="AABB" type="CSGBox3D" parent="EntranceRoom"]
 visible = false
 size = Vector3(10, 10, 10)
 
+[node name="player_spawner" parent="EntranceRoom" groups=["player_spawner"] instance=ExtResource("8_tf2xe")]
+thing_to_spawn = ExtResource("6_ywmvj")
+add_to_scene = true
+
+[node name="floor" parent="EntranceRoom" instance=ExtResource("9_ftcvr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0)
+
+[node name="DOOR" type="CSGMesh3D" parent="EntranceRoom/floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -5)
+transparency = 1.0
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_ywnrs")
+
+[node name="ceiling" parent="EntranceRoom" instance=ExtResource("9_ftcvr")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 5, 0)
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" parent="EntranceRoom" instance=ExtResource("9_ftcvr")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 5)
+
+[node name="MeshInstance3D2" parent="EntranceRoom" instance=ExtResource("9_ftcvr")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="MeshInstance3D3" parent="EntranceRoom" instance=ExtResource("9_ftcvr")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -5, 0, 0)
+
 [node name="AnyRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -20)
 script = ExtResource("3_fjpfa")
+min_count = 0
+max_count = 0
 
 [node name="floor" type="CSGMesh3D" parent="AnyRoom"]
 use_collision = true
@@ -182,6 +200,8 @@ size = Vector3(10, 10, 10)
 [node name="Stair" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 20)
 script = ExtResource("3_fjpfa")
+min_count = 0
+max_count = 1
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="Stair"]
 use_collision = true

@@ -1,12 +1,11 @@
 extends Node3D
 
 @onready var dungeon_generator = $DungeonGenerator
-#@onready var player = $Character
+var player
 var finished : bool
 var stop_adding_walls : bool
 
 func _physics_process(delta):
-	#get_tree().call_group("enemies", "update_target_location", player.global_transform.origin)
 	#if $music.playing == false: 
 		#$music.play()
 	if dungeon_generator.stage == 5 and !stop_adding_walls:
@@ -20,7 +19,11 @@ func _physics_process(delta):
 								stop_adding_walls = true
 		else:
 			finished = true
-	pass
+	
+	if player == null:
+		for node in get_children():
+			if node.is_in_group("player"):
+				player = node
 
 #
 #func splat():

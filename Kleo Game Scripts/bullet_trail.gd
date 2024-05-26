@@ -5,12 +5,14 @@ var alpha = 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	self.material_override.albedo_color = Color("ffff00ff")
 	var duplicate_material = material_override.duplicate()
 	material_override = duplicate_material
-	var fade = get_tree().create_tween()
-	fade.tween_property(self, "modulate:a", 0, 0.15)
 	await get_tree().create_timer(0.15).timeout
 	queue_free()
+
+func _process(delta):
+	self.material_override.albedo_color = lerp(self.material_override.albedo_color, Color("ffffff00"), delta * 30)
 
 func init(posBarrel, posTarget):
 	var draw_mesh = ImmediateMesh.new()

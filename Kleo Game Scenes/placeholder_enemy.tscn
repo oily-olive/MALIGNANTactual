@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://kigi77jdldbv"]
+[gd_scene load_steps=8 format=3 uid="uid://kigi77jdldbv"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/placeholder_enemy.gd" id="1_8o8ya"]
 [ext_resource type="Material" uid="uid://fr3sd0cgfj6s" path="res://Olive Game Material Overrides/placeholder3.tres" id="1_cxslt"]
+[ext_resource type="Script" path="res://Kleo Game Scenes/attack_hitbox.gd" id="3_ym5ij"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_2qhod"]
 material = ExtResource("1_cxslt")
@@ -11,8 +12,13 @@ material = ExtResource("1_cxslt")
 [sub_resource type="BoxMesh" id="BoxMesh_133lu"]
 size = Vector3(0.25, 0.25, 0.25)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_7kqyn"]
+size = Vector3(0.8, 2, 0.8)
+
 [node name="enemy" type="CharacterBody3D" groups=["enemies"]]
 script = ExtResource("1_8o8ya")
+ATTACK_DAMAGE = 10.0
+moves = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -40,6 +46,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.627244)
 [node name="RayCast3D" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 target_position = Vector3(0, -2, 0)
+
+[node name="attack_hitbox" type="Area3D" parent="." groups=["parryable_attack"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("3_ym5ij")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attack_hitbox"]
+shape = SubResource("BoxShape3D_7kqyn")
 
 [connection signal="target_reached" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_target_reached"]
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

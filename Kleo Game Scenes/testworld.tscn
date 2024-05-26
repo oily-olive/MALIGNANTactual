@@ -7,7 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://c0184thle35lc" path="res://sound/music/Cascada_de_coagulacion.ogg" id="6_2wcpc"]
 [ext_resource type="PackedScene" uid="uid://coygjw43iv5f3" path="res://Kleo Game Scenes/utilities/spawner.tscn" id="7_bqb5d"]
 [ext_resource type="Material" uid="uid://cveieyb35bc3x" path="res://Olive Game Material Overrides/placeholder.tres" id="7_skaob"]
-[ext_resource type="PackedScene" uid="uid://d2lick5p12qol" path="res://Kleo Game Scenes/stationary_lobber_enemy.tscn" id="8_1awnq"]
+[ext_resource type="PackedScene" uid="uid://kigi77jdldbv" path="res://Kleo Game Scenes/placeholder_enemy.tscn" id="8_7uhl1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ocl38"]
 sky_top_color = Color(0.0352941, 0.290196, 0.333333, 1)
@@ -295,12 +295,18 @@ shape = SubResource("ConcavePolygonShape3D_i43sp")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 0)
 shape = SubResource("BoxShape3D_nhq3t")
 
-[node name="enemy7" parent="." instance=ExtResource("8_1awnq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.1129, 3.30349, -46.8443)
-
 [node name="spawner" parent="." instance=ExtResource("7_bqb5d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.26551, 0)
 thing_to_spawn = ExtResource("1_hd2yr")
 spawns_immediately = true
+
+[node name="enemy" parent="." instance=ExtResource("8_7uhl1")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.396558, -26.9076)
+
+[node name="enemy2" parent="." instance=ExtResource("8_7uhl1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.54371, 0.76136, -28.5738)
+
+[node name="enemy3" parent="." instance=ExtResource("8_7uhl1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.99002, 0.220759, -30.7473)
 
 [connection signal="body_entered" from="out_of_bounds" to="." method="_on_out_of_bounds_body_entered"]

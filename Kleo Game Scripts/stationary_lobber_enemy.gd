@@ -5,6 +5,7 @@ extends CharacterBody3D
 @onready var hit_anchor = $Node3D2
 @onready var collision_detect = $RayCast3D
 @onready var world = self.get_parent()
+@onready var head = $CollisionShape3D2
 @export var SPEED = 10.0
 const MAX_HEALTH = 5.0
 var HEALTH
@@ -14,6 +15,7 @@ var hit = load("res://Kleo Game Scenes/projectile.tscn")
 var hit_l
 var is_dead = false
 var direction
+var player: Node3D
 
 func _ready():
 	HEALTH = MAX_HEALTH
@@ -49,8 +51,15 @@ func _physics_process(delta):
 			pass
 		
 
-func update_target_location(target_location):
-	nav_agent.target_position = target_location
+func _process(delta):
+	if player == null:
+		for node in world.get_children():
+			if node.is_in_group("player"):
+				player = node
+	if player != null:
+		var offset = randf_range(-0.6, 0.6)
+		await get_tree().create_timer(0+offset).timeout
+		nav_agent.target_position = player.global_position
 
 func get_hit(damage):
 	is_stunned = true

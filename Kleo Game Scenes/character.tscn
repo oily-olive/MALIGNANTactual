@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://ddg1hwbx1w5xl"]
+[gd_scene load_steps=18 format=3 uid="uid://ddg1hwbx1w5xl"]
 
 [ext_resource type="Script" path="res://Kleo Game Scripts/Character.gd" id="1_igum2"]
 [ext_resource type="PackedScene" uid="uid://c7ejmxrhcb08p" path="res://Kleo Game Scenes/new_revolver_good.tscn" id="2_t7emm"]
@@ -17,17 +17,21 @@
 material = ExtResource("5_ojw3w")
 size = Vector3(2, 2, 2)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_aq0is"]
+size = Vector3(0.5, 0.5, 1)
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1812g"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3ad5"]
 material = ExtResource("7_0rsev")
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_66dhv"]
-height = 0.25
+height = 0.275
 radius = 2.5
 
 [node name="Character" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_mask = 3
 script = ExtResource("1_igum2")
 metadata/_edit_horizontal_guides_ = [300.0, -300.0]
 metadata/_edit_vertical_guides_ = [568.0, -568.0]
@@ -66,7 +70,6 @@ hit_from_inside = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)
 
 [node name="psx_filter" type="MeshInstance3D" parent="CameraRoot/Camera3D"]
-visible = false
 mesh = SubResource("BoxMesh_t1j6g")
 
 [node name="hitscan_06" type="RayCast3D" parent="CameraRoot/Camera3D"]
@@ -95,7 +98,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -100)
 
 [node name="hitscan_08" type="RayCast3D" parent="CameraRoot/Camera3D"]
 target_position = Vector3(0, 0, -1.25)
+collision_mask = 3
 collide_with_areas = true
+
+[node name="melee_area" type="Area3D" parent="CameraRoot/Camera3D"]
+collision_layer = 0
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraRoot/Camera3D/melee_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+shape = SubResource("BoxShape3D_aq0is")
 
 [node name="cam_direction" type="Node3D" parent="CameraRoot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
@@ -166,7 +178,6 @@ grow_vertical = 0
 
 [node name="SpeedLabel" type="Label" parent="CameraRoot2D/ui_container_bottomright"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 text = "SPEED: "
 label_settings = ExtResource("6_6cijo")
@@ -211,6 +222,28 @@ unique_name_in_owner = true
 layout_mode = 2
 label_settings = ExtResource("6_6cijo")
 
+[node name="menu_container" type="VBoxContainer" parent="CameraRoot2D"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -80.0
+offset_right = 20.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="CameraRoot2D/menu_container"]
+layout_mode = 2
+text = "resume"
+
+[node name="Button2" type="Button" parent="CameraRoot2D/menu_container"]
+layout_mode = 2
+text = "exit to menu"
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_1812g")
 
@@ -237,4 +270,10 @@ shape = SubResource("CylinderShape3D_66dhv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 target_position = Vector3(0, -0.5, 0)
 
+[node name="Area3D2" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2"]
+
+[connection signal="pressed" from="CameraRoot2D/menu_container/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CameraRoot2D/menu_container/Button2" to="." method="_on_button_2_pressed"]
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

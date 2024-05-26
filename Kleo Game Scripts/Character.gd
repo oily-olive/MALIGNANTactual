@@ -1,8 +1,9 @@
 extends CharacterBody3D
+class_name Player
 
 var SPEED_BOOST = 1.0
 @export var NORMAL_SPEED = 6.5
-var SPRINT_SPEED = 50.0/13.0
+var SPRINT_SPEED = 34.75/13.0
 @export var JUMP_VELOCITY = 130.0
 @export var WALL_JUMP_VELOCITY = 12.0
 @export var WALL_JUMP_COUNTER = 4
@@ -20,6 +21,7 @@ var MAX_OVERHEAL = 2.0 * MAX_HP
 var WEAPON = 1
 var BOOST_DURATION = 0.0
 var db_firemode = 0
+var revAMMO = 6
 var shotAMMO = 3
 var SCORE = 0
 var STYLE = 0.0
@@ -36,25 +38,27 @@ var jump_add = 0.0
 var melee_charge = 0.0
 var melee_is_charged = false
 var damage_since_last_shotgun_reload = 0.0
-@onready var neck := $CameraRoot
-@onready var cam := $CameraRoot/Camera3D
-@onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer
-@onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer
-@onready var shottyAnim := $CameraRoot/Camera3D/new_shotgun/AnimationPlayer
-@onready var raycast_r := $CameraRoot/Camera3D/hitscan_01
-@onready var raycast_db_u := $CameraRoot/Camera3D/hitscan_06
-@onready var raycast_db_l := $CameraRoot/Camera3D/hitscan_07
-@onready var raycast_melee := $CameraRoot/Camera3D/hitscan_08
-@onready var raycastEnd_r := $CameraRoot/Camera3D/hitscan_01/hitscan_end
-@onready var raycastEnd_db_u := $CameraRoot/Camera3D/hitscan_06/hitscan_end
-@onready var raycastEnd_db_l := $CameraRoot/Camera3D/hitscan_07/hitscan_end
-@onready var cross_c := $CameraRoot/Camera3D/hitscan_01/crossover_check
-@onready var stepsound := $walk_sound
+@onready var neck := $CameraRoot as Node3D
+@onready var cam := $CameraRoot/Camera3D as Camera3D
+@onready var revolverAnim := $CameraRoot/Camera3D/plchld_revolver_better/AnimationPlayer as AnimationPlayer
+@onready var doublebarrelAnim := $CameraRoot/Camera3D/double_shotty/AnimationPlayer as AnimationPlayer
+@onready var shottyAnim := $CameraRoot/Camera3D/new_shotgun/AnimationPlayer as AnimationPlayer
+@onready var raycast_r := $CameraRoot/Camera3D/hitscan_01 as RayCast3D
+@onready var raycast_db_u := $CameraRoot/Camera3D/hitscan_06 as RayCast3D
+@onready var raycast_db_l := $CameraRoot/Camera3D/hitscan_07 as RayCast3D
+@onready var raycast_melee := $CameraRoot/Camera3D/hitscan_08 as RayCast3D
+@onready var raycastEnd_r := $CameraRoot/Camera3D/hitscan_01/hitscan_end as Node3D
+@onready var raycastEnd_db_u := $CameraRoot/Camera3D/hitscan_06/hitscan_end as Node3D
+@onready var raycastEnd_db_l := $CameraRoot/Camera3D/hitscan_07/hitscan_end as Node3D
+@onready var cross_c := $CameraRoot/Camera3D/hitscan_01/crossover_checkas as RayCast3D
+@onready var stepsound := $walk_sound as AudioStreamPlayer3D
 @onready var gun1 := $CameraRoot/Camera3D/plchld_revolver_better
 @onready var gun2 := $CameraRoot/Camera3D/double_shotty
 @onready var gun3 := $CameraRoot/Camera3D/new_shotgun
 @onready var ch := $CameraRoot2D/ui_container_center/crosshair
-@onready var cam_d := $CameraRoot/Camera3D/cam_direction
+@onready var cam_d := $CameraRoot/Camera3D/cam_direction as Node3D
+@onready var melee_area = $CameraRoot/Camera3D/melee_area as Area3D
+
 
 # bullet variables
 var bulletStandard := load("res://Kleo Game Scenes/shotgun_spread.tscn")
@@ -67,10 +71,10 @@ var instanceBullet_s
 const BOB_AMPLITUDE = 0.08
 var t_bob = 0.0
 
-@onready var revolverBarrel := $CameraRoot/Camera3D/plchld_revolver_better/BarrelEnd
-@onready var dbBarrel_u := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end
-@onready var dbBarrel_l := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end
-@onready var rsBarrel := $CameraRoot/Camera3D/new_shotgun/Cube_002/barrel_end
+@onready var revolverBarrel := $CameraRoot/Camera3D/plchld_revolver_better/BarrelEnd as Node3D
+@onready var dbBarrel_u := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/upper_barrel_end as Node3D
+@onready var dbBarrel_l := $CameraRoot/Camera3D/double_shotty/Armature/Skeleton3D/Cylinder_001/Cylinder_001/lower_barrel_end as Node3D
+@onready var rsBarrel := $CameraRoot/Camera3D/new_shotgun/Cube_002/barrel_end as Node3D
 
 var proyectile #on ready for non hitscan weapons
 var bulletTrail = load("res://Kleo Game Scenes/bullet_trail.tscn")
@@ -90,9 +94,7 @@ func hitstop_standard(legnth):
 	Engine.time_scale = 1
 
 func _unhandled_input(event): # Window Activity and Camera Movement
-	if event is InputEventMouseButton:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	elif event.is_action_pressed("ui_cancel"): # ui_cancel = esc key
+	if event.is_action_pressed("ui_cancel"): # ui_cancel = esc key
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	var time_s = Engine.time_scale
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -115,17 +117,15 @@ func _physics_process(delta):
 		is_sliding = false
 		if Input.is_action_just_pressed("slide"):
 			ground_slam()
-		if raycast_melee.is_colliding() and Input.is_action_just_released("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
+		if raycast_melee.is_colliding() and Input.is_action_just_pressed("melee") and WALL_JUMP_COUNTER > 0 and !raycast_melee.get_collider().is_in_group("enemies") and velocity.normalized().dot(raycast_melee.get_collision_normal()) <= 0.0 and raycast_melee.get_collision_normal().y < 0.55 and raycast_melee.get_collision_normal().y > -0.45 and velocity.x + velocity.z != 0.0:
 			velocity = velocity.bounce(raycast_melee.get_collision_normal())
-			if velocity.y <= JUMP_VELOCITY/2.0:
-				velocity.y += JUMP_VELOCITY/2.0
+			velocity.y += 3.25
 			WALL_JUMP_COUNTER -= 1
 	# UI
 	$CameraRoot2D/ui_container_bottomleft/StaminaLabel.text = "STAMINA: " + str(int(STAMINA))
 	$CameraRoot2D/ui_container_bottomleft/HPLabel.text = "HP: " + str(int(HP))
 
 	if is_on_floor():
-		reset_jump()
 		if amount_rotated != 0.0:
 			reset_rotation_counter()
 		WALL_JUMP_COUNTER = 4
@@ -133,40 +133,41 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("jump"):
 			if is_sliding == false:
 				velocity.y += 6.5 + jump_add
-			if is_sliding == true and STAMINA >= 50.0:
+			if is_sliding == true and STAMINA >= 20.0:
 				velocity.y = 6.5
-				STAMINA -= 50.0
+				STAMINA -= 20.0
 		if Input.is_action_pressed("jump"):
 			if is_sliding == false:
-				velocity.y += 6.5
+				velocity.y += 6.5 + jump_add
+		reset_jump()
 			
+	if Engine.time_scale != 0.0:
+		if is_sliding == true:
+			cam.set_position(Vector3(0, -0.631, 0))
+		else:
+			cam.set_position(Vector3(0, 0.631, 0))
 
-	if is_sliding == true:
-		cam.set_position(Vector3(0, -0.631, 0))
-	else:
-		cam.set_position(Vector3(0, 0.631, 0))
-
-	#STAMINA
-	if not Input.is_action_pressed("sprint") && STAMINA_REGEN_COOLDOWN == STAMINA_REGEN_COOLDOWN_MAX && STAMINA < MAX_STAMINA && is_on_floor():
-		STAMINA = STAMINA + 0.75
-	if STAMINA > MAX_STAMINA:
-		STAMINA = MAX_STAMINA
-	if STAMINA_REGEN_COOLDOWN < STAMINA_REGEN_COOLDOWN_MAX && not Input.is_action_pressed("sprint"):
-		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN + 0.025
-	if Input.is_action_pressed("sprint") or not is_on_floor() or is_sliding == true or is_slamming == true:
-		STAMINA_REGEN_COOLDOWN = 0
-	if STAMINA_REGEN_COOLDOWN > STAMINA_REGEN_COOLDOWN_MAX:
-		STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
-	
-	
-	if BOOST_DURATION == 0.0:
-		SPEED_BOOST = 1.0
+		#STAMINA
+		if not Input.is_action_pressed("sprint") && STAMINA_REGEN_COOLDOWN == STAMINA_REGEN_COOLDOWN_MAX && STAMINA < MAX_STAMINA && is_on_floor():
+			STAMINA = STAMINA + 0.75
+		if STAMINA > MAX_STAMINA:
+			STAMINA = MAX_STAMINA
+		if STAMINA_REGEN_COOLDOWN < STAMINA_REGEN_COOLDOWN_MAX && not Input.is_action_pressed("sprint"):
+			STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN + 0.025
+		if Input.is_action_pressed("sprint") or not is_on_floor() or is_sliding == true or is_slamming == true:
+			STAMINA_REGEN_COOLDOWN = 0
+		if STAMINA_REGEN_COOLDOWN > STAMINA_REGEN_COOLDOWN_MAX:
+			STAMINA_REGEN_COOLDOWN = STAMINA_REGEN_COOLDOWN_MAX
 		
-	if BOOST_DURATION > 0.0:
-		BOOST_DURATION = BOOST_DURATION - 0.01
 		
-	if BOOST_DURATION < 0.0:
-		BOOST_DURATION = 0.0
+		if BOOST_DURATION == 0.0:
+			SPEED_BOOST = 1.0
+			
+		if BOOST_DURATION > 0.0:
+			BOOST_DURATION = BOOST_DURATION - 0.01
+			
+		if BOOST_DURATION < 0.0:
+			BOOST_DURATION = 0.0
 	
 	if is_sliding == true and velocityClamped <= MOVE_SPEED:
 		is_sliding = false
@@ -219,6 +220,8 @@ func _physics_process(delta):
 		WEAPON = WEAPON - 1
 	if Input.is_action_just_pressed("weaponScrollDown"):
 		WEAPON = WEAPON + 1
+	if revAMMO == 0:
+		reload_revolver()
 	if shotAMMO == 0:
 		reload_revshotgun()
 	if WEAPON == 1:
@@ -237,59 +240,36 @@ func _physics_process(delta):
 		gun2.visible = false
 		gun3.visible = true
 	
-	if Input.is_action_pressed("primaryFire"):
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if WEAPON == 1:
 			shoot_revolver()
+			revolver_special()
 		if WEAPON == 2:
 			shoot_doublebarrel()
-		if WEAPON == 3:
-			shoot_revshotgun()
-	
-	if Input.is_action_pressed("secondaryFire"):
-		if WEAPON == 1:
-			pass
-		if WEAPON == 2:
 			dbshotgun_switch()
 		if WEAPON == 3:
-			if shotAMMO != 5:
-				reload_revshotgun()
-	
-	if Input.is_action_pressed("tertiaryFire"):
-		#hitstop_standard()
-		pass
-	
-	if Input.is_action_pressed("melee"):
-		melee_charge += 0.05
-		if melee_charge > 1.0 and melee_is_charged == false:
-			HP -= 25.0
-			melee_is_charged = true
-	
-	if Input.is_action_just_released("melee"):
-		if melee_is_charged == false:
-			if raycast_melee.is_colliding():
-				if raycast_melee.get_collider().is_in_group("enemies"):
-					raycast_melee.get_collider().get_hit(0.25)
-				if raycast_melee.get_collider().is_in_group("projectiles"):
-					if raycast_melee.get_collider().is_parryable:
-						raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 20, false, true)
+			shoot_revshotgun()
+		if Input.is_action_pressed("secondaryFire") and WEAPON == 3 and shotAMMO != 5:
+			reload_revshotgun()
+		if Input.is_action_pressed("tertiaryFire"):
+			#hitstop_standard()
+			pass
+		if Input.is_action_just_pressed("melee"):
+			for obj in melee_area.get_overlapping_bodies():
+				if obj.is_in_group("enemies"):
+					obj.get_hit(0.25)
+					obj.parry()
+				if obj.is_in_group("projectiles"):
+					if obj.is_parryable:
+						obj.change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 20, false, true)
 						hitstop_standard(0.25)
 						stylebonus_parry()
-		else:
-			if raycast_melee.is_colliding():
-				if raycast_melee.get_collider().is_in_group("enemies"):
-					raycast_melee.get_collider().get_hit(1.0)
-					var direction = (cam.global_position - cam_d.global_position).normalized() * -1
-					raycast_melee.get_collider().get_launched_by_punch(direction)
-					HP += 25.0
-				if raycast_melee.get_collider().is_in_group("projectiles"):
-					if raycast_melee.get_collider().is_parryable:
-						raycast_melee.get_collider().change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 40, true, true)
-						hitstop_standard(0.35)
-						HP += 25.0
-						stylebonus_parry()
-			melee_is_charged = false
-		melee_charge = 0.0
-	
+		if Input.is_action_pressed("melee"):
+			melee_charge_punch()
+		if Input.is_action_just_released("melee"):
+			melee_charge = 0.0
+			already_punched = false
+		
 	#FOV
 	
 
@@ -298,25 +278,26 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
+	if Engine.time_scale != 0.0:
 	#concentration
-	if CONCENTRATION > MAX_CONCENTRATION:
-		CONCENTRATION = MAX_CONCENTRATION
-	if CONCENTRATION < 0.0:
-		CONCENTRATION = 0.0
-	$CameraRoot2D/ui_container_bottomleft/ConcentrationLabel.text = str(int(CONCENTRATION))
-	
-	#style
-	if STYLE_TIMEOUT < 0:
-		STYLE_TIMEOUT = 0
+		if CONCENTRATION > MAX_CONCENTRATION:
+			CONCENTRATION = MAX_CONCENTRATION
+		if CONCENTRATION < 0.0:
+			CONCENTRATION = 0.0
+		$CameraRoot2D/ui_container_bottomleft/ConcentrationLabel.text = str(int(CONCENTRATION))
 		
-	if STYLE_TIMEOUT > 0:
-		STYLE_TIMEOUT = STYLE_TIMEOUT - 0.1
-	
-	if STYLE_TIMEOUT == 0:
-		SCORE = SCORE + int(STYLE * COMBO)
-		CONCENTRATION += (STYLE / 10.0)
-		STYLE = 0
-		COMBO = 0
+		#style
+		if STYLE_TIMEOUT < 0:
+			STYLE_TIMEOUT = 0
+			
+		if STYLE_TIMEOUT > 0:
+			STYLE_TIMEOUT = STYLE_TIMEOUT - 0.1
+		
+		if STYLE_TIMEOUT == 0:
+			SCORE = SCORE + int(STYLE * COMBO)
+			CONCENTRATION += (STYLE / 10.0)
+			STYLE = 0
+			COMBO = 0
 	
 	if Input.is_action_just_pressed("heal") and CONCENTRATION >= 50:
 		heal()
@@ -336,6 +317,12 @@ func _physics_process(delta):
 	if is_slamming == true:
 		$Area3D/CollisionShape3D.set_disabled(false)
 	
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		$CameraRoot2D/menu_container.visible = false
+	else:
+		$CameraRoot2D/menu_container.visible = true
+		Engine.time_scale = 0
+var already_punched = false
 func headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
 	pos.y = sin(time * BOB_FREQUENCY) * BOB_AMPLITUDE
@@ -343,61 +330,91 @@ func headbob(time) -> Vector3:
 	return pos
 
 func shoot_revolver():
+	if Input.is_action_pressed("primaryFire"):
+		if revAMMO != 0:
+			if !revolverAnim.is_playing():
+				revolverAnim.play("recoil")
+				hitscan(raycast_r, revolverBarrel, raycastEnd_r, 1.0, true, false, false)
+				revAMMO -= 1
+func reload_revolver():
 	if !revolverAnim.is_playing():
-		revolverAnim.play("recoil")
-		hitscan(raycast_r, revolverBarrel, raycastEnd_r, 1.0, true, false, false)
-		
-		
+		var time = revAMMO
+		revAMMO = 0
+		await get_tree().create_timer((time + 1) / 3.0).timeout
+		revAMMO = 6
+var RSp_charge = 0.0
+var ricochet = load("res://Kleo Game Scenes/ricochet.tscn")
+func revolver_special():
+	if !revolverAnim.is_playing():
+		if Input.is_action_pressed("secondaryFire") and RSp_charge < 4.5:
+			RSp_charge += 0.1
+		if Input.is_action_just_released("secondaryFire"):
+			if 3.0 < RSp_charge and RSp_charge < 4.0:
+				revolverAnim.play("recoil")
+				hitscan(raycast_r, revolverBarrel, raycastEnd_r, revAMMO, true, false, false)
+				if raycast_r.is_colliding():
+					if raycast_r.get_collider().is_in_group("enemies"):
+						var load_ricochet = ricochet.instantiate()
+						load_ricochet.create(raycast_r, raycast_r.get_collider(), revAMMO - 1)
+						load_ricochet.position = raycast_r.get_collider().global_position
+						get_parent().add_child(load_ricochet)
+					else:
+						var load_ricochet = ricochet.instantiate()
+						load_ricochet.create(raycast_r, null, revAMMO - 1)
+						load_ricochet.position = raycast_r.get_collision_point()
+						get_parent().add_child(load_ricochet)
+			reload_revolver()
+			RSp_charge = 0
+		%SpeedLabel.text = str(RSp_charge)
 #behold, the folly of man.
 func shoot_doublebarrel():
-	if !doublebarrelAnim.is_playing():
-		doublebarrelAnim.play("recoil and reload")
-		if db_firemode == 0:
-			var basis_x = cam.rotation_degrees.x
-			var vector_y = (-1 * (basis_x * (10.0 / 9.0))) / 100.0
-			var vector_z = abs((((abs(basis_x)) * (10.0 / 9.0)) / 100.0) - 1)
-			var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
-			var newvelocity = lerp(velocity, gun_direction * 13, 1)
-			velocity += newvelocity
-			shotgun_spread(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.25, false, false)
-			await get_tree().create_timer(0.007).timeout
-			shotgun_spread(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.25, false, false)
-		else:
-			if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
-				hitstop_standard(0.15)
-				cross_c.get_collider().get_hit(1.0)
-			hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.5, true, true, false)
-			hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.5, true, true, false)
-		
-func dbshotgun_switch():
-	if !doublebarrelAnim.is_playing():
-		doublebarrelAnim.play("reload")
-		if db_firemode == 0:
-			db_firemode = 1
-		else:
-			db_firemode = 0
-			
-func shoot_revshotgun():
-	if shotAMMO != 0:
-		if !shottyAnim.is_playing():
-			shottyAnim.play("recoil")
-			shotAMMO = shotAMMO - 1
-			if shotAMMO != 2:
-				hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true, true, true)
+	if Input.is_action_pressed("primaryFire"):
+		if !doublebarrelAnim.is_playing():
+			doublebarrelAnim.play("recoil and reload")
+			if db_firemode == 0:
+				var basis_x = cam.rotation_degrees.x
+				var vector_y = (-1 * (basis_x * (10.0 / 9.0))) / 100.0
+				var vector_z = abs((((abs(basis_x)) * (10.0 / 9.0)) / 100.0) - 1)
+				var gun_direction = neck.transform.basis * Vector3(0,vector_y,vector_z)
+				var newvelocity = lerp(velocity, gun_direction * 13, 1)
+				velocity += newvelocity
+				shotgun_spread(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.25, false, false)
+				await get_tree().create_timer(0.007).timeout
+				shotgun_spread(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.25, false, false)
 			else:
-				shotgun_spread(raycast_r, rsBarrel, raycastEnd_r, 0.25, false, true)
-	else:
-		pass
-
+				if cross_c.is_colliding() and cross_c.get_collider().is_in_group("enemies"):
+					hitstop_standard(0.15)
+					cross_c.get_collider().get_hit(1.0)
+				hitscan(raycast_db_u, dbBarrel_u, raycastEnd_db_u, 0.5, true, true, false)
+				hitscan(raycast_db_l, dbBarrel_l, raycastEnd_db_l, 0.5, true, true, false)
+func dbshotgun_switch():
+	if Input.is_action_pressed("secondaryFire"):
+		if !doublebarrelAnim.is_playing():
+			doublebarrelAnim.play("reload")
+			if db_firemode == 0:
+				db_firemode = 1
+			else:
+				db_firemode = 0
+				
+func shoot_revshotgun():
+	if Input.is_action_pressed("primaryFire"):
+		if shotAMMO != 0:
+			if !shottyAnim.is_playing():
+				shottyAnim.play("recoil")
+				shotAMMO = shotAMMO - 1
+				if shotAMMO != 2:
+					hitscan(raycast_r, rsBarrel, raycastEnd_r, 2.0 + abs(amount_rotated), true, true, true)
+				else:
+					shotgun_spread(raycast_r, rsBarrel, raycastEnd_r, 0.25, false, true)
 func reload_revshotgun():
 	if !shottyAnim.is_playing():
 		shottyAnim.play("reload")
-		if shotAMMO > 0:
+		if shotAMMO > 0 and damage_since_last_shotgun_reload > 0.0:
 			var basis_x = cam.rotation_degrees.x
 			var vector_y = (-1 * (basis_x * (10.0 / 9.0))) / 100.0
 			var vector_z = abs((((abs(basis_x)) * (10.0 / 9.0)) / 100.0) - 1)
 			var gun_direction = neck.transform.basis * Vector3(0,vector_y * -1,vector_z * -1)
-			velocity += gun_direction * damage_since_last_shotgun_reload * 3.5
+			velocity = gun_direction * damage_since_last_shotgun_reload * 7.5
 		shotAMMO = 3
 		damage_since_last_shotgun_reload = 0.0
 		
@@ -520,3 +537,34 @@ func heal():
 	if Input.is_action_pressed("heal") and CONCENTRATION >= 50:
 		HP += 25.0
 		CONCENTRATION -= 50.0
+
+func melee_charge_punch():
+	if !already_punched:
+		melee_charge += 0.05
+		if melee_charge > 1.0 and melee_is_charged == false:
+			HP -= 25.0
+			melee_is_charged = true
+		if melee_is_charged == true:
+			for obj in melee_area.get_overlapping_bodies():
+				if obj.is_in_group("enemies"):
+					obj.get_hit(0.5)
+					var direction = (cam.global_position - cam_d.global_position).normalized() * -1
+					obj.get_launched_by_punch(direction)
+					obj.parry()
+					HP += 25.0
+				if obj.is_in_group("projectiles"):
+					if obj.is_parryable:
+						obj.change_direction((cam.global_position - cam_d.global_position).normalized() * -1, 40, true, true)
+						hitstop_standard(0.35)
+						HP += 25.0
+						stylebonus_parry()
+			melee_is_charged = false
+			melee_charge = 0.0
+			already_punched = true
+
+func _on_button_pressed():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	Engine.time_scale = 1
+var main_menu = preload("res://Kleo Game Scenes/menus/main_menu.tscn") as PackedScene
+func _on_button_2_pressed():
+	get_tree().change_scene_to_packed(main_menu)

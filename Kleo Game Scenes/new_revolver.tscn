@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://1uyqjcc04knm"]
+
+[ext_resource type="PackedScene" uid="uid://dcvcx8y3o4crv" path="res://Kleo Game Models/plchld_revolver_better.blend" id="1_64fg3"]
+
+[sub_resource type="Animation" id="Animation_7ydv8"]
+resource_name = "fire"
+length = 0.07
+step = 0.01
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.01, 1, 0, 0, 0, 0.03, 1, 0, 0, -0.05, 0.06, 1, 0, 0, -0.5, 0.07, 1, 0, 0, 0, 0.0701, 1, 0, 0, 0)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.01, 1, 0, 0, 0, 1, 0.03, 1, 10, 0, 0, 1, 0.06, 1, 10, 0, 0, 1, 0.07, 1, -5, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uwkk2"]
+_data = {
+"fire": SubResource("Animation_7ydv8")
+}
+
+[node name="Node3D" type="Node3D"]
+
+[node name="plchld_revolver_better" parent="." instance=ExtResource("1_64fg3")]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="plchld_revolver_better"]
+libraries = {
+"": SubResource("AnimationLibrary_uwkk2")
+}

@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=3 uid="uid://kesm3un562ly"]
+
+[ext_resource type="Script" path="res://addons/qodot/src/nodes/qodot_map.gd" id="1_72u0a"]
+[ext_resource type="Resource" uid="uid://c36hv0o6g0udo" path="res://addons/qodot/game_definitions/fgd/qodot_fgd.tres" id="2_v7ivl"]
+[ext_resource type="Script" path="res://addons/qodot/src/nodes/qodot_entity.gd" id="3_2e65q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wiusd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dhyo0"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_sg34c"]
+_surfaces = [{
+"aabb": AABB(-5, -5, -0.5, 10, 10, 1),
+"attribute_data": PackedByteArray(0, 0, 160, 194, 0, 0, 32, 195, 0, 0, 160, 194, 0, 0, 0, 0, 0, 0, 160, 66, 0, 0, 0, 0, 0, 0, 160, 66, 0, 0, 32, 195, 0, 0, 128, 65, 0, 0, 32, 195, 0, 0, 0, 66, 0, 0, 32, 195, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 128, 65, 0, 0, 160, 194, 0, 0, 128, 65, 0, 0, 160, 66, 0, 0, 0, 66, 0, 0, 160, 66, 0, 0, 0, 66, 0, 0, 160, 194, 0, 0, 128, 65, 0, 0, 160, 194, 0, 0, 0, 66, 0, 0, 160, 194, 0, 0, 0, 66, 0, 0, 160, 66, 0, 0, 128, 65, 0, 0, 160, 66, 0, 0, 128, 65, 0, 0, 32, 195, 0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 32, 195, 0, 0, 160, 194, 0, 0, 32, 195, 0, 0, 160, 66, 0, 0, 32, 195, 0, 0, 160, 66, 0, 0, 0, 0, 0, 0, 160, 194, 0, 0, 0, 0),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 4, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 8, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 12, 0, 14, 0, 15, 0, 16, 0, 17, 0, 18, 0, 16, 0, 18, 0, 19, 0, 20, 0, 21, 0, 22, 0, 20, 0, 22, 0, 23, 0),
+"material": SubResource("StandardMaterial3D_dhyo0"),
+"name": "__TB_empty",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray(0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 63, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 63, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 191, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 63, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 64, 0, 0, 160, 64, 0, 0, 0, 63, 0, 0, 160, 64, 0, 0, 160, 192, 0, 0, 0, 63, 0, 0, 160, 192, 0, 0, 160, 192, 0, 0, 0, 63, 255, 255, 255, 255, 255, 255, 255, 63, 255, 255, 255, 255, 255, 255, 255, 63, 255, 255, 255, 255, 255, 255, 255, 63, 255, 255, 255, 255, 255, 255, 255, 63, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 255, 255, 255, 127, 255, 191, 255, 127, 255, 255, 255, 127, 255, 191, 255, 127, 255, 255, 255, 127, 255, 191, 255, 127, 255, 255, 255, 127, 255, 191, 255, 255, 255, 127, 255, 127, 255, 63, 255, 255, 255, 127, 255, 127, 255, 63, 255, 255, 255, 127, 255, 127, 255, 63, 255, 255, 255, 127, 255, 127, 255, 63, 255, 127, 255, 127, 255, 255, 255, 191, 255, 127, 255, 127, 255, 255, 255, 191, 255, 127, 255, 127, 255, 255, 255, 191, 255, 127, 255, 127, 255, 255, 255, 191)
+}]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_la1yg"]
+data = PackedVector3Array(-5, 5, -0.5, -5, -5, -0.5, 5, -5, -0.5, -5, 5, -0.5, 5, -5, -0.5, 5, 5, -0.5, -5, 5, -0.5, -5, 5, 0.5, -5, -5, 0.5, -5, 5, -0.5, -5, -5, 0.5, -5, -5, -0.5, 5, -5, -0.5, -5, -5, -0.5, -5, -5, 0.5, 5, -5, -0.5, -5, -5, 0.5, 5, -5, 0.5, 5, 5, -0.5, 5, 5, 0.5, -5, 5, 0.5, 5, 5, -0.5, -5, 5, 0.5, -5, 5, -0.5, 5, 5, -0.5, 5, -5, -0.5, 5, -5, 0.5, 5, 5, -0.5, 5, -5, 0.5, 5, 5, 0.5, -5, 5, 0.5, 5, 5, 0.5, 5, -5, 0.5, -5, 5, 0.5, 5, -5, 0.5, -5, -5, 0.5)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_6kvcn"]
+size = Vector3(10, 10, 1)
+
+[node name="QodotMap" type="Node3D"]
+script = ExtResource("1_72u0a")
+map_file = "C:/Users/kleoe/OneDrive/Documents/malignant/qodot_maps/prefabs/set0/wall.map"
+entity_fgd = ExtResource("2_v7ivl")
+texture_file_extensions = PackedStringArray("png", "jpg", "jpeg", "bmp")
+default_material = SubResource("StandardMaterial3D_wiusd")
+
+[node name="entity_0_worldspawn" type="Node3D" parent="."]
+script = ExtResource("3_2e65q")
+properties = {
+"_tb_textures": "textures",
+"classname": "worldspawn"
+}
+
+[node name="entity_0_mesh_instance" type="MeshInstance3D" parent="entity_0_worldspawn"]
+cast_shadow = 2
+gi_mode = 0
+mesh = SubResource("ArrayMesh_sg34c")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="entity_0_worldspawn/entity_0_mesh_instance"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="entity_0_worldspawn/entity_0_mesh_instance/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_la1yg")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
+occluder = SubResource("BoxOccluder3D_6kvcn")

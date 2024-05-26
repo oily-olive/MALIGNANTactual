@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dyo4k65r3m8qe"]
+
+[ext_resource type="Script" path="res://Kleo Game Scripts/ricochet.gd" id="1_0msqv"]
+
+[node name="ricochet" type="RayCast3D"]
+target_position = Vector3(0, 0, -100)
+script = ExtResource("1_0msqv")
+
+[node name="end" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -100)

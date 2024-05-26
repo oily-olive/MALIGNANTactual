@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://bbl0cccbs7p8l"]
+
+[ext_resource type="PackedScene" uid="uid://b1dmrp0bowno2" path="res://Kleo Game Models/hp_bar.blend" id="1_07c4j"]
+[ext_resource type="Texture2D" uid="uid://c72gwg474076n" path="res://Kleo Game Sprites/hp_bar.png" id="2_xos38"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olq81"]
+transparency = 1
+albedo_texture = ExtResource("2_xos38")
+rim_enabled = true
+rim_tint = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnf8l"]
+albedo_texture = ExtResource("2_xos38")
+rim_enabled = true
+rim_tint = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eeblp"]
+albedo_texture = ExtResource("2_xos38")
+rim_enabled = true
+rim_tint = 1.0
+
+[node name="hp_bar" instance=ExtResource("1_07c4j")]
+
+[node name="Plane_002" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_olq81")
+
+[node name="Plane" parent="Armature/Skeleton3D" index="0"]
+material_override = SubResource("StandardMaterial3D_nnf8l")
+
+[node name="Plane_001" parent="." index="2"]
+material_override = SubResource("StandardMaterial3D_eeblp")

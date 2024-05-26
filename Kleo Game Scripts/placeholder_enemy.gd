@@ -1,19 +1,23 @@
 extends CharacterBody3D
+class_name Enemy
 
 @onready var nav_agent = $NavigationAgent3D
 @onready var look_anchor = $Node3D
 @onready var hit_anchor = $Node3D2
 @onready var collision_detect = $RayCast3D
 @onready var world = self.get_parent()
+@onready var head = $CollisionShape3D
+@onready var attack_hitbox = $attack_hitbox as Area3D
 @export var SPEED = 10.0
-const MAX_HEALTH = 1.0
+@export var ATTACK_DAMAGE: float = 1
+@export var MAX_HEALTH = 1.0
 var HEALTH
 var attack_cooldown = 5.0
 var is_stunned = false
-var hit = load("res://Kleo Game Scenes/hit_detect.tscn")
-var hit_l
 var is_dead = false
 var splatted = false
+var player: Player
+@export var moves: bool
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -36,7 +40,7 @@ func _physics_process(delta):
 		var next_location = nav_agent.get_next_path_position()
 		var new_velocity = (next_location - current_location).normalized() * SPEED
 		
-		if attack_cooldown == 5.0:
+		if attack_cooldown == 5.0 and moves:
 			nav_agent.set_velocity(new_velocity)
 			
 		#look_at(Vector3((next_location.x - current_location.x) * velocity.x, look_anchor.global_position.y, (next_location.z - current_location.z) * velocity.z))
@@ -56,11 +60,18 @@ func _physics_process(delta):
 		
 		collision_detect.set_target_position(velocity.normalized() * 2)
 
-func update_target_location(target_location):
-	nav_agent.target_position = target_location
+func _process(delta):
+	if player == null:
+		for node in world.get_children():
+			if node.is_in_group("player"):
+				player = node
+	if player != null:
+		var offset = randf_range(-0.6, 0.6)
+		await get_tree().create_timer(0+offset).timeout
+		nav_agent.target_position = player.global_position
 	
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
-	if is_dead == true:
+	if is_dead == true or !moves:
 		pass
 	else:
 		if attack_cooldown == 5.0:
@@ -81,16 +92,19 @@ func death_check():
 		die()
 	else:
 		pass
-
+var attacking: bool = false
+var attack_interrupted: bool = false
 func attack_initiate():
-	if attack_cooldown == 5.0:
-		attack_cooldown = 0.0
-	await get_tree().create_timer(0.5).timeout
-	hit_l = hit.instantiate()
-	hit_l.position = hit_anchor.global_position
-	hit_l.transform.basis = hit_anchor.global_transform.basis
-	get_parent().add_child(hit_l)
-	
+	attack_cooldown = 0.0
+	await get_tree().create_timer(0.3).timeout
+	attacking = true
+	await get_tree().create_timer(0.2).timeout
+	if !attack_interrupted:
+		for body in attack_hitbox.get_overlapping_bodies():
+			if body == player:
+				body.get_hit_p(ATTACK_DAMAGE)
+	attacking = false
+	attack_interrupted = false
 
 
 func _on_navigation_agent_3d_target_reached():
@@ -113,7 +127,15 @@ func splatter(damage):
 	world.splat()
 	
 func get_launched_by_punch(direction):
-	if not is_on_floor():
-		velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40)
-	else:
-		velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40) / 4
+	if moves:
+		if not is_on_floor():
+			velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40)
+		else:
+			velocity = Vector3(direction.x * 40, direction.y * 40, direction.z * 40) / 4
+
+func parry():
+	if attacking:
+		attack_interrupted = true
+		player.hitstop_standard(0.25)
+		player.stylebonus_parry()
+		get_hit(3)
