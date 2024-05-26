@@ -12,15 +12,19 @@ config_version=5
 
 config/name="MALIGNANT"
 config/tags=PackedStringArray("3d", "shooter")
-run/main_scene="res://Kleo Game Scenes/testworld.tscn"
+run/main_scene="res://Kleo Game Scenes/menus/main_menu.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://malignant_icon_placeholder.png"
-config/windows_native_icon="res://icon.ico"
+config/icon="res://malignant_logo.png"
+config/windows_native_icon="res://malignant_logo.ico"
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/qodot/plugin.cfg")
 
 [input]
 
@@ -104,3 +108,4 @@ heal={
 scaling_3d/mode=1
 scaling_3d/scale=0.33
 scaling_3d/fsr_sharpness=0.0
+occlusion_culling/use_occlusion_culling=true
