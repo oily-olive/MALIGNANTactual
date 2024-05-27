@@ -6,6 +6,12 @@ extends Control
 @onready var exit_button = $MarginContainer/HBoxContainer/VBoxContainer/exit_button as Button
 @onready var testworld = load("res://Kleo Game Scenes/testworld.tscn") as PackedScene
 @onready var test_dungeon = load("res://Kleo Game Scenes/test_dungeon.tscn") as PackedScene
+@onready var music = $music as AudioStreamPlayer
+
+
+func _process(delta):
+	if !music.playing:
+		music.play()
 
 func _ready():
 	start_button.button_down.connect(start_testworld)
